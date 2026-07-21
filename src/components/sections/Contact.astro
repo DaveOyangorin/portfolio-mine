@@ -1,0 +1,87 @@
+---
+/** Closing call to action with direct contact routes. */
+import { contact, resume, socials } from '../../data/socials';
+import { profile } from '../../data/profile';
+import Button from '../ui/Button.astro';
+import SocialLinks from '../ui/SocialLinks.astro';
+import Icon from '../icons/Icon.astro';
+
+const linkedIn = socials.find((social) => social.label === 'LinkedIn');
+---
+
+<section id="contact" class="scroll-mt-24 py-20 sm:py-28">
+  <div class="container-page">
+    <div
+      class="relative overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] px-6 py-16 text-center sm:px-12 sm:py-20"
+      data-reveal
+    >
+      <!-- Decorative accent wash. -->
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[var(--color-accent-500)] opacity-10 blur-[100px]"
+      >
+      </div>
+
+      <div class="relative mx-auto max-w-2xl">
+        <p class="mb-3 font-mono text-sm text-[var(--accent)] uppercase">
+          06 — Contact
+        </p>
+
+        <h2 class="text-3xl font-medium sm:text-4xl">
+          {contact.ctaHeading}
+          <span class="text-gradient">{contact.ctaSubheading}</span>
+        </h2>
+
+        <p class="mt-5 text-lg text-[var(--text-muted)]">
+          {contact.ctaBody}
+        </p>
+
+        <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+          {
+            contact.email ? (
+              <Button href={`mailto:${contact.email}`} size="lg">
+                <Icon name="mail" size={18} />
+                {contact.email}
+              </Button>
+            ) : (
+              /* No email published on the live site — LinkedIn is the primary
+                 route until one is added to data/socials.ts. */
+              linkedIn && (
+                <Button href={linkedIn.url} size="lg" external>
+                  <Icon name="linkedin" size={18} />
+                  Message me on LinkedIn
+                </Button>
+              )
+            )
+          }
+
+          {
+            resume.available && (
+              <Button href={resume.path} variant="secondary" size="lg" download>
+                {profile.resumeLabel}
+                <Icon name="download" size={18} />
+              </Button>
+            )
+          }
+        </div>
+
+        <!-- Calendly inline embed — book a 30 minute slot without leaving the page. -->
+        <div class="mt-10 overflow-hidden rounded-2xl border border-[var(--border-subtle)]">
+          <iframe
+            src="https://calendly.com/dave-oyangorin18/30min?hide_gdpr_banner=1"
+            title="Schedule a 30 minute call"
+            loading="lazy"
+            class="h-[700px] w-full border-0"></iframe>
+        </div>
+
+        <div class="mt-10 flex flex-col items-center gap-5">
+          <SocialLinks />
+          <p class="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+            <Icon name="map-pin" size={16} />
+            {contact.location}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

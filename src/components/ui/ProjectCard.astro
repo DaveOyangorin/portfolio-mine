@@ -1,0 +1,122 @@
+---
+/**
+ * Project card.
+ *
+ * The whole card is clickable via a stretched link on the title, so there is a
+ * single tab stop for the card plus one for the external "Visit site" link.
+ */
+import { Image } from 'astro:assets';
+import ProjectPlaceholder from './ProjectPlaceholder.astro';
+import Icon from '../icons/Icon.astro';
+import type { Project } from '../../data/types';
+
+interface Props {
+  project: Project;
+  /** Eager-load the first cards; the rest stay lazy. */
+  eager?: boolean;
+  /** Cap the tags shown on dense grids. */
+  maxTags?: number;
+}
+
+const { project, eager = false, maxTags = 5 } = Astro.props;
+
+const visibleTags = project.tags.slice(0, maxTags);
+const hiddenTagCount = project.tags.length - visibleTags.length;
+---
+
+<article
+  class="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-card-hover)] focus-within:border-[var(--accent)]"
+>
+  {/*
+    Source artwork is client logos and banners with aspect ratios from 7:1 to
+    0.38:1, so images are *contained* and centred on a plate rather than cropped
+    — object-cover would slice the wordmarks in half. The plate colour is fixed
+    per project (see `imageTone`) instead of following the theme, because the
+    logos have their ink colour baked in.
+  */}
+  <div
+    class:list={[
+      'flex aspect-[16/10] items-center justify-center overflow-hidden p-8',
+      project.image
+        ? project.imageTone === 'dark'
+          ? 'bg-[#12151c]'
+          : 'bg-white'
+        : 'bg-[var(--surface-sunken)]',
+    ]}
+  >
+    {
+      project.image ? (
+        <Image
+          src={project.image}
+          alt={project.title}
+          widths={[400, 800]}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          class="max-h-full w-auto max-w-full object-contain transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]"
+        />
+      ) : (
+        <ProjectPlaceholder title={project.title} class="rounded-xl" />
+      )
+    }
+  </div>
+
+  <div class="flex flex-1 flex-col p-6">
+    <h3 class="text-lg font-medium">
+      <a
+        href={`/projects/${project.slug}/`}
+        class="after:absolute after:inset-0 after:content-[''] group-hover:text-[var(--accent)] transition-colors"
+      >
+        {project.title}
+        <span class="sr-only">— view project details</span>
+      </a>
+    </h3>
+
+    <p class="mt-2.5 line-clamp-3 text-sm text-[var(--text-muted)]">
+      {project.description}
+    </p>
+
+    {
+      visibleTags.length > 0 && (
+        <ul class="mt-5 flex flex-wrap gap-2">
+          {visibleTags.map((tag) => (
+            <li class="rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] px-2.5 py-1 font-mono text-xs text-[var(--text-muted)]">
+              {tag}
+            </li>
+          ))}
+          {hiddenTagCount > 0 && (
+            <li class="px-1 py-1 font-mono text-xs text-[var(--text-muted)]">
+              +{hiddenTagCount} more
+            </li>
+          )}
+        </ul>
+      )
+    }
+
+    <div class="mt-6 flex items-center gap-4 pt-1">
+      <span
+        class="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--accent)]"
+        aria-hidden="true"
+      >
+        Case study
+        <Icon
+          name="arrow-right"
+          size={16}
+          class="transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:translate-x-1"
+        />
+      </span>
+
+      {/* z-10 lifts this above the stretched link so it stays independently clickable. */}
+      <a
+        href={project.liveUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="link-underline relative z-10 ml-auto inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+        aria-label={`Visit the live ${project.title} website (opens in a new tab)`}
+      >
+        Visit site
+        <Icon name="arrow-up-right" size={14} />
+      </a>
+    </div>
+  </div>
+</article>

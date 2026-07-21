@@ -1,0 +1,31 @@
+---
+/** Row of social profile links with accessible labels. */
+import { socials } from '../../data/socials';
+import Icon from '../icons/Icon.astro';
+import type { IconName } from '../icons/Icon.astro';
+
+interface Props {
+  size?: number;
+  class?: string;
+}
+
+const { size = 20, class: className = '' } = Astro.props;
+---
+
+<ul class:list={['flex items-center gap-3', className]}>
+  {
+    socials.map((social) => (
+      <li>
+        <a
+          href={social.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${social.label} (opens in a new tab)`}
+          class="flex items-center justify-center rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-2.5 text-[var(--text-muted)] transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        >
+          <Icon name={social.icon as IconName} size={size} />
+        </a>
+      </li>
+    ))
+  }
+</ul>

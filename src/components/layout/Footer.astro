@@ -1,0 +1,74 @@
+---
+/** Site footer: brand blurb, navigation, socials, and colophon. */
+import { navItems } from '../../data/nav';
+import { profile } from '../../data/profile';
+import { contact } from '../../data/socials';
+import SocialLinks from '../ui/SocialLinks.astro';
+import Icon from '../icons/Icon.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--border-subtle)] bg-[var(--surface-sunken)]">
+  <div class="container-page py-14 sm:py-16">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
+      <div>
+        <p class="font-mono text-base font-medium text-[var(--text-strong)]">
+          <span class="text-[var(--accent)]">&lt;</span>
+          Dave
+          <span class="text-[var(--accent)]">/&gt;</span>
+        </p>
+        <p class="mt-3 max-w-sm text-sm text-[var(--text-muted)]">
+          {profile.heroStatement}
+        </p>
+        <p
+          class="mt-4 flex items-center gap-2 text-sm text-[var(--text-muted)]"
+        >
+          <Icon name="map-pin" size={16} />
+          {contact.location}
+        </p>
+      </div>
+
+      <nav aria-label="Footer">
+        <h2 class="text-sm font-medium text-[var(--text-strong)]">Navigate</h2>
+        <ul class="mt-4 space-y-2.5">
+          {
+            navItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="text-sm font-medium text-[var(--text-strong)]">Elsewhere</h2>
+        <SocialLinks class="mt-4" />
+        {
+          contact.email && (
+            <a
+              href={`mailto:${contact.email}`}
+              class="link-underline mt-5 inline-flex items-center gap-2 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
+            >
+              <Icon name="mail" size={16} />
+              {contact.email}
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col gap-3 border-t border-[var(--border-subtle)] pt-6 text-sm text-[var(--text-muted)] sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>&copy; {year} {profile.name}. All rights reserved.</p>
+      <p>Built with Astro &amp; Tailwind CSS.</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,78 @@
+---
+/**
+ * All <head> metadata: title, description, canonical, Open Graph, Twitter card,
+ * icons, and theme colour. JSON-LD is emitted separately by StructuredData.astro.
+ */
+import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LOCALE, SITE_TITLE, SITE_URL } from '../../data/site';
+import { profile } from '../../data/profile';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Absolute or root-relative path to the social preview image. */
+  image?: string;
+  /** og:type — "profile" for the homepage, "article" for project pages. */
+  type?: 'website' | 'article' | 'profile';
+  /** Set on pages that should not be indexed (e.g. 404). */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  // PNG, not SVG — social platforms don't render SVG previews.
+  image = '/og-image.png',
+  type = 'website',
+  noindex = false,
+} = Astro.props;
+
+// Page titles get the name suffix; the homepage uses the full site title as-is.
+const pageTitle = title ? `${title} | ${profile.name}` : SITE_TITLE;
+
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const socialImage = new URL(image, SITE_URL).href;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<meta name="keywords" content={SITE_KEYWORDS.join(', ')} />
+<meta name="author" content={profile.name} />
+<link rel="canonical" href={canonical} />
+
+{
+  noindex ? (
+    <meta name="robots" content="noindex, follow" />
+  ) : (
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+  )
+}
+
+<!-- Open Graph -->
+<meta property="og:site_name" content={profile.name} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={socialImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${profile.name} — ${profile.shortTitle}`} />
+<meta property="og:locale" content={SITE_LOCALE} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={socialImage} />
+
+<!-- Icons & theme -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="theme-color" content="#08090c" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+
+<link rel="sitemap" href="/sitemap-index.xml" />

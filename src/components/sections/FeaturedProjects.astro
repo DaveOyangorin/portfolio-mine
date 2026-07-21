@@ -1,0 +1,32 @@
+---
+/** Homepage highlight grid linking through to the full projects index. */
+import { featuredProjects, projects } from '../../data/projects';
+import Section from '../ui/Section.astro';
+import ProjectCard from '../ui/ProjectCard.astro';
+import Button from '../ui/Button.astro';
+import Icon from '../icons/Icon.astro';
+---
+
+<Section
+  id="projects-preview"
+  eyebrow="05 — Work"
+  title="Selected projects"
+  subtitle="Client websites built, rebuilt, and maintained — from B2B lead generation to local service businesses."
+>
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      featuredProjects.map((project, index) => (
+        <div data-reveal style={`--reveal-delay: ${(index % 3) * 90}ms`}>
+          <ProjectCard project={project} eager={index < 3} />
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="mt-12 flex justify-center" data-reveal>
+    <Button href="/projects" variant="secondary" size="lg">
+      View all {projects.length} projects
+      <Icon name="arrow-right" size={18} />
+    </Button>
+  </div>
+</Section>

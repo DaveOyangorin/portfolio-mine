@@ -1,0 +1,208 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+   Emerald accent on a near-black surface — carried over from the original site
+   (emerald-600 buttons, emerald glow shadow), refined for AA contrast in both
+   colour schemes. Fonts match the original: Inter for text, IBM Plex Mono for
+   accents and numerals.
+--------------------------------------------------------------------------- */
+@theme {
+  /* Same two families as the original Next.js site, which loaded them through
+     next/font/google: Inter (variable, wght axis) for text and IBM Plex Mono
+     400/500 for accents. 'Inter Variable' is the family name @fontsource-variable
+     registers — without it the browser silently falls through to the system UI
+     font. Fallbacks are kept to bare sans-serif/monospace to match the original
+     stacks (`var(--font-inter), sans-serif`). */
+  --font-sans: 'Inter Variable', 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --color-accent-50: #ecfdf5;
+  --color-accent-100: #d1fae5;
+  --color-accent-200: #a7f3d0;
+  --color-accent-300: #6ee7b7;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+  --color-accent-700: #047857;
+  --color-accent-800: #065f46;
+  --color-accent-900: #064e3b;
+
+  --shadow-glow: 0 0 68px 7px rgb(5 150 105 / 0.4);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -8px rgb(0 0 0 / 0.12);
+  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.06), 0 16px 40px -12px rgb(0 0 0 / 0.2);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Semantic surface tokens, remapped per colour scheme. */
+:root {
+  --surface: #ffffff;
+  --surface-raised: #f8fafc;
+  --surface-sunken: #f1f5f9;
+  --border-subtle: #e2e8f0;
+  --text-strong: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --accent: var(--color-accent-700);
+  --accent-contrast: #ffffff;
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --surface: #08090c;
+  --surface-raised: #101319;
+  --surface-sunken: #0c0e13;
+  --border-subtle: #232833;
+  --text-strong: #f8fafc;
+  --text-body: #cbd5e1;
+  --text-muted: #94a3b8;
+  --accent: var(--color-accent-400);
+  --accent-contrast: #04110c;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Offset anchor targets so the sticky header never covers a heading. */
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--text-body);
+    font-family: var(--font-sans);
+    /* The original site applied no font-smoothing or text-rendering overrides,
+       so Inter renders at the browser default weight here too. Forcing
+       antialiased/optimizeLegibility made the same text look noticeably lighter. */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--text-strong);
+    text-wrap: balance;
+    /* No letter-spacing override: the original never tightened its headings. */
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, consistent focus ring for keyboard users on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+  }
+
+  /* Respect users who have asked for reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Page gutter, consistent across every section and capped for ultrawide. */
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container-page {
+      max-width: 88rem;
+    }
+  }
+
+  /* Frosted panel used for cards and the sticky header. */
+  .glass {
+    background-color: color-mix(in srgb, var(--surface-raised) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* Theme toggle: show only the icon for the theme you can switch *to*.
+     Global (not scoped) because the SVGs come from the Icon child component. */
+  .theme-icon-dark,
+  .theme-icon-light {
+    display: none;
+  }
+
+  :root[data-theme='dark'] .theme-icon-dark,
+  :root[data-theme='light'] .theme-icon-light {
+    display: block;
+  }
+
+  .link-underline {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 200ms var(--ease-out-soft);
+  }
+
+  .link-underline:hover {
+    text-decoration-color: var(--accent);
+  }
+}
+
+@layer utilities {
+  /* ----- Scroll reveal -----
+     Elements start hidden and are revealed by an IntersectionObserver adding
+     [data-revealed]. The .no-js guard in Layout.astro keeps content visible
+     when JavaScript is unavailable. */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 620ms var(--ease-out-soft),
+      transform 620ms var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-reveal][data-revealed] {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .text-gradient {
+    background-image: linear-gradient(
+      110deg,
+      var(--color-accent-400),
+      var(--color-accent-600) 55%,
+      var(--color-accent-300)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+}

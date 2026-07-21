@@ -1,0 +1,46 @@
+---
+/** About copy alongside the animated statistics grid. */
+import { profile, stats } from '../../data/profile';
+import Section from '../ui/Section.astro';
+---
+
+<Section
+  id="about"
+  eyebrow="01 — About"
+  title="Who I am"
+  subtitle="Websites that look sharp, load fast, and earn their place in search results."
+>
+  <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+    <div class="space-y-5" data-reveal>
+      {
+        profile.about.map((paragraph) => (
+          <p class="text-lg text-[var(--text-body)]">{paragraph}</p>
+        ))
+      }
+    </div>
+
+    <dl class="grid grid-cols-2 gap-4 self-start">
+      {
+        stats.map((stat, index) => (
+          <div
+            class="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-5 transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-[var(--accent)]"
+            data-reveal
+            style={`--reveal-delay: ${index * 80}ms`}
+          >
+            <dt class="sr-only">{stat.label}</dt>
+            <dd>
+              <span class="block font-mono text-3xl font-medium text-[var(--accent)] sm:text-4xl">
+                {/* Counter animates from 0; the value is present for no-JS and SEO. */}
+                <span data-counter={stat.value}>{stat.value}</span>
+                {stat.suffix}
+              </span>
+              <span class="mt-2 block text-sm text-[var(--text-muted)]">
+                {stat.label}
+              </span>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</Section>

@@ -1,0 +1,44 @@
+---
+/** Light/dark toggle. Persists to localStorage; initial value set in Layout.astro. */
+import Icon from '../icons/Icon.astro';
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  aria-label="Switch colour theme"
+  aria-live="polite"
+  class="rounded-lg p-2 text-[var(--text-strong)] transition-colors hover:bg-[var(--surface-sunken)] hover:text-[var(--accent)]"
+>
+  <!--
+    Only one icon is visible at a time. Visibility is driven by global rules in
+    styles/global.css (`.theme-icon-*`) rather than scoped styles, because these
+    SVGs are rendered by a child component and never receive this component's
+    scope hash.
+  -->
+  <Icon name="sun" size={20} class="theme-icon-dark" />
+  <Icon name="moon" size={20} class="theme-icon-light" />
+</button>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const root = document.documentElement;
+
+  const syncLabel = () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    toggle?.setAttribute('aria-label', `Switch to ${next} theme`);
+  };
+
+  syncLabel();
+
+  toggle?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    syncLabel();
+    try {
+      localStorage.setItem('theme', next);
+    } catch (e) {
+      /* Storage unavailable — the choice just won't persist. */
+    }
+  });
+</script>

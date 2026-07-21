@@ -1,0 +1,36 @@
+---
+/** Back-to-top button; fades in after the first viewport of scrolling. */
+import Icon from '../icons/Icon.astro';
+---
+
+<button
+  type="button"
+  data-back-to-top
+  aria-label="Back to top"
+  class="glass invisible fixed bottom-6 right-6 z-50 rounded-full p-3 text-[var(--text-strong)] opacity-0 shadow-[var(--shadow-card)] transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:text-[var(--accent)]"
+>
+  <Icon name="arrow-up" size={20} />
+</button>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+
+  if (button) {
+    const hiddenClasses = ['invisible', 'opacity-0'];
+
+    const sync = () => {
+      const show = window.scrollY > window.innerHeight * 0.8;
+      hiddenClasses.forEach((cls) => button.classList.toggle(cls, !show));
+    };
+
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+
+    button.addEventListener('click', () => {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+      // Move focus to the top of the document for keyboard and screen reader users.
+      document.getElementById('main')?.focus({ preventScroll: true });
+    });
+  }
+</script>

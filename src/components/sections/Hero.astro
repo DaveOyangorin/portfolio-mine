@@ -1,0 +1,125 @@
+---
+/** Above-the-fold hero: headline, statement, CTAs, and portrait. */
+import { Image } from 'astro:assets';
+import { profile } from '../../data/profile';
+import { contact, resume, socials } from '../../data/socials';
+import Button from '../ui/Button.astro';
+import SocialLinks from '../ui/SocialLinks.astro';
+import Icon from '../icons/Icon.astro';
+
+/** Falls back to LinkedIn while no email address is configured. */
+const contactHref = contact.email ? `mailto:${contact.email}` : '#contact';
+const linkedIn = socials.find((social) => social.label === 'LinkedIn');
+---
+
+<section id="home" class="relative overflow-hidden scroll-mt-24">
+  <!-- Ambient accent glow. Decorative only. -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-[var(--color-accent-500)] opacity-[0.07] blur-[120px]"
+  >
+  </div>
+
+  <div class="container-page relative py-16 sm:py-24 lg:py-28">
+    <div class="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
+      <div>
+        <p
+          class="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-raised)] px-4 py-1.5 font-mono text-xs text-[var(--text-muted)]"
+          data-reveal
+        >
+          <span class="relative flex h-2 w-2">
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-accent-400)] opacity-75"
+            ></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-accent-500)]"
+            ></span>
+          </span>
+          Available for new projects
+        </p>
+
+        <h1
+          class="text-4xl font-medium"
+          data-reveal
+          style="--reveal-delay: 80ms"
+        >
+          Hello, my name is
+          <span class="text-gradient block sm:inline">Dave Oyangorin</span>
+        </h1>
+
+        <p
+          class="mt-6 max-w-xl text-lg text-[var(--text-body)] sm:text-xl"
+          data-reveal
+          style="--reveal-delay: 160ms"
+        >
+          A <strong class="font-medium text-[var(--text-strong)]">WordPress Developer</strong>,
+          <strong class="font-medium text-[var(--text-strong)]">SEO Specialist</strong>, and
+          <strong class="font-medium text-[var(--text-strong)]">Front-End Web Developer</strong>
+          based in {profile.location}.
+        </p>
+
+        <p
+          class="mt-4 max-w-xl text-[var(--text-muted)]"
+          data-reveal
+          style="--reveal-delay: 220ms"
+        >
+          {profile.heroStatement}
+        </p>
+
+        <div
+          class="mt-9 flex flex-wrap items-center gap-3"
+          data-reveal
+          style="--reveal-delay: 280ms"
+        >
+          <Button href={contactHref} size="lg" external={Boolean(contact.email)}>
+            Get in touch
+            <Icon name="arrow-right" size={18} />
+          </Button>
+
+          {
+            resume.available ? (
+              <Button href={resume.path} variant="secondary" size="lg" download>
+                {profile.resumeLabel}
+                <Icon name="download" size={18} />
+              </Button>
+            ) : (
+              /* No CV file yet — link to LinkedIn so the CTA still works.
+                 Swap to the download button once the PDF is added; see
+                 MISSING-CONTENT.md. */
+              linkedIn && (
+                <Button href={linkedIn.url} variant="secondary" size="lg" external>
+                  View LinkedIn
+                  <Icon name="arrow-up-right" size={18} />
+                </Button>
+              )
+            )
+          }
+        </div>
+
+        <SocialLinks class="mt-9" />
+      </div>
+
+      <div class="relative mx-auto w-full max-w-sm lg:max-w-none" data-reveal style="--reveal-delay: 120ms">
+        <div
+          class="relative overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] shadow-[var(--shadow-card-hover)]"
+        >
+          <Image
+            src={profile.avatar}
+            alt={profile.avatarAlt}
+            widths={[360, 480, 720]}
+            sizes="(max-width: 1024px) 20rem, 26rem"
+            loading="eager"
+            fetchpriority="high"
+            class="h-full w-full object-cover"
+          />
+        </div>
+
+        <!-- Decorative accent frame behind the portrait. -->
+        <div
+          aria-hidden="true"
+          class="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-3xl border border-[var(--color-accent-500)] opacity-30"
+        >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,74 @@
+---
+/**
+ * JSON-LD: a Person graph for the homepage (with job history and skills),
+ * or a CreativeWork graph for a project detail page.
+ */
+import { SITE_DESCRIPTION, SITE_URL } from '../../data/site';
+import { profile } from '../../data/profile';
+import { experience } from '../../data/experience';
+import { skills } from '../../data/skills';
+import { socials, contact } from '../../data/socials';
+import type { Project } from '../../data/types';
+
+interface Props {
+  /** When set, emits CreativeWork markup for this project instead of Person. */
+  project?: Project;
+}
+
+const { project } = Astro.props;
+
+const personId = `${SITE_URL}/#person`;
+
+const person = {
+  '@type': 'Person',
+  '@id': personId,
+  name: profile.name,
+  jobTitle: profile.title,
+  description: SITE_DESCRIPTION,
+  url: SITE_URL,
+  image: new URL(profile.avatar.src, SITE_URL).href,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Negros Oriental',
+    addressCountry: 'PH',
+  },
+  knowsAbout: skills.map((skill) => skill.name),
+  sameAs: socials.map((social) => social.url),
+  // Only advertise an email once one is configured in socials.ts.
+  ...(contact.email ? { email: `mailto:${contact.email}` } : {}),
+  worksFor: experience.map((entry) => ({
+    '@type': 'Organization',
+    name: entry.company,
+  })),
+};
+
+const schema = project
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: project.title,
+      description: project.description,
+      url: new URL(`/projects/${project.slug}/`, SITE_URL).href,
+      author: { '@id': personId },
+      creator: { '@id': personId },
+      keywords: project.tags.join(', '),
+      ...(project.image ? { image: new URL(project.image.src, SITE_URL).href } : {}),
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@graph': [
+        person,
+        {
+          '@type': 'WebSite',
+          '@id': `${SITE_URL}/#website`,
+          url: SITE_URL,
+          name: profile.name,
+          description: SITE_DESCRIPTION,
+          publisher: { '@id': personId },
+          inLanguage: 'en-US',
+        },
+      ],
+    };
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

@@ -1,0 +1,53 @@
+---
+/** A page section with a consistent heading block, spacing, and reveal animation. */
+
+interface Props {
+  id: string;
+  /** Small mono label above the heading, e.g. "01 — About". */
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  /** Alternate background to separate adjacent sections. */
+  tone?: 'default' | 'sunken';
+  class?: string;
+}
+
+const {
+  id,
+  eyebrow,
+  title,
+  subtitle,
+  tone = 'default',
+  class: className = '',
+} = Astro.props;
+
+const headingId = `${id}-heading`;
+---
+
+<section
+  id={id}
+  aria-labelledby={headingId}
+  class:list={[
+    'scroll-mt-24 py-20 sm:py-28',
+    tone === 'sunken' && 'bg-[var(--surface-sunken)]',
+    className,
+  ]}
+>
+  <div class="container-page">
+    <header class="mb-12 max-w-2xl sm:mb-16" data-reveal>
+      {
+        eyebrow && (
+          <p class="mb-3 font-mono text-sm text-[var(--accent)] uppercase">
+            {eyebrow}
+          </p>
+        )
+      }
+      <h2 id={headingId} class="text-3xl font-medium sm:text-4xl">
+        {title}
+      </h2>
+      {subtitle && <p class="mt-4 text-lg text-[var(--text-muted)]">{subtitle}</p>}
+    </header>
+
+    <slot />
+  </div>
+</section>

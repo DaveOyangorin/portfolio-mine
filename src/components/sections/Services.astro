@@ -1,0 +1,36 @@
+---
+/** Services grid. Content is derived — see the note at the top of data/services.ts. */
+import { services } from '../../data/services';
+import Section from '../ui/Section.astro';
+import Icon from '../icons/Icon.astro';
+import type { IconName } from '../icons/Icon.astro';
+---
+
+<Section
+  id="services"
+  eyebrow="03 — Services"
+  title="How I can help"
+  subtitle="From the first build through to the ongoing work that keeps a site ranking."
+>
+  <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      services.map((service, index) => (
+        <li
+          class="group rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-7 transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-card-hover)]"
+          data-reveal
+          style={`--reveal-delay: ${index * 70}ms`}
+        >
+          <span
+            class="inline-flex rounded-xl border border-[var(--border-subtle)] bg-[var(--surface)] p-3 text-[var(--accent)] transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:scale-110"
+            aria-hidden="true"
+          >
+            <Icon name={service.icon as IconName} size={22} />
+          </span>
+
+          <h3 class="mt-5 text-lg font-medium">{service.title}</h3>
+          <p class="mt-2.5 text-[var(--text-muted)]">{service.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

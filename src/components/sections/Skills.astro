@@ -1,0 +1,55 @@
+---
+/** Skills grouped by category, with a proficiency bar scaled to years. */
+import { maxSkillYears, skillsByCategory } from '../../data/skills';
+import Section from '../ui/Section.astro';
+
+const groups = skillsByCategory();
+---
+
+<Section
+  id="skills"
+  eyebrow="02 — Skills"
+  title="What I work with"
+  subtitle="Years of hands-on experience across the platforms and tools I use daily."
+  tone="sunken"
+>
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      groups.map((group, groupIndex) => (
+        <div
+          class="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface)] p-6 transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
+          data-reveal
+          style={`--reveal-delay: ${groupIndex * 90}ms`}
+        >
+          <h3 class="font-mono text-sm text-[var(--accent)] uppercase">
+            {group.category}
+          </h3>
+
+          <ul class="mt-5 space-y-5">
+            {group.items.map((skill) => (
+              <li>
+                <div class="flex items-baseline justify-between gap-3">
+                  <span class="font-medium text-[var(--text-strong)]">{skill.name}</span>
+                  <span class="font-mono text-xs whitespace-nowrap text-[var(--text-muted)]">
+                    {skill.years} {skill.years === 1 ? 'yr' : 'yrs'}
+                  </span>
+                </div>
+
+                {/* Decorative bar — the years are already stated in text above. */}
+                <div
+                  aria-hidden="true"
+                  class="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--surface-sunken)]"
+                >
+                  <div
+                    class="h-full rounded-full bg-[var(--accent)] opacity-80"
+                    style={`width: ${Math.round((skill.years / maxSkillYears) * 100)}%`}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</Section>

@@ -1,0 +1,36 @@
+---
+/**
+ * Fallback artwork for projects with no image.
+ *
+ * Currently used by: Heavenly Silk — the live site serves no image for it.
+ * Drop a file into src/assets/projects/ and set `image` in data/projects.ts to
+ * replace this. See MISSING-CONTENT.md.
+ */
+
+interface Props {
+  /** Shown as large initials so each placeholder still reads as distinct. */
+  title: string;
+  class?: string;
+}
+
+const { title, class: className = '' } = Astro.props;
+
+const initials = title
+  .split(/\s+/)
+  .slice(0, 2)
+  .map((word) => word[0]?.toUpperCase() ?? '')
+  .join('');
+---
+
+<div
+  role="img"
+  aria-label={`${title} — no preview image available`}
+  class:list={[
+    'flex h-full w-full items-center justify-center bg-[var(--surface-sunken)] bg-[radial-gradient(circle_at_30%_20%,color-mix(in_srgb,var(--color-accent-500)_18%,transparent),transparent_60%)]',
+    className,
+  ]}
+>
+  <span class="font-mono text-4xl font-medium text-[var(--accent)] opacity-70">
+    {initials}
+  </span>
+</div>

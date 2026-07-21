@@ -1,0 +1,198 @@
+---
+/** Base document shell: head, header, footer, and the global UI scripts. */
+import '@fontsource-variable/inter';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+
+import { SITE_LANG } from '../data/site';
+import BaseHead from '../components/seo/BaseHead.astro';
+import StructuredData from '../components/seo/StructuredData.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import ScrollProgress from '../components/ui/ScrollProgress.astro';
+import BackToTop from '../components/ui/BackToTop.astro';
+import type { Project } from '../data/types';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article' | 'profile';
+  noindex?: boolean;
+  /** Passed through to StructuredData for project detail pages. */
+  project?: Project;
+}
+
+const { title, description, image, type, noindex, project } = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE_LANG} data-theme="dark" class="no-js">
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      noindex={noindex}
+    />
+    <StructuredData project={project} />
+
+    <!--
+      Applied before first paint so the stored theme never flashes.
+      Inline and blocking by design; it is only a few hundred bytes.
+    -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.remove('no-js');
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          root.dataset.theme = stored || (prefersLight ? 'light' : 'dark');
+        } catch (e) {
+          /* localStorage blocked — keep the default dark theme. */
+        }
+      })();
+    </script>
+  </head>
+
+  <body class="min-h-screen bg-[var(--surface)]">
+    <!-- Skip link: first tab stop on every page. -->
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-[var(--accent)] focus:px-4 focus:py-2 focus:font-medium focus:text-[var(--accent-contrast)]"
+    >
+      Skip to main content
+    </a>
+
+    <ScrollProgress />
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+    <BackToTop />
+
+    <script>
+      /**
+       * Global UI behaviour. Kept as one small module so the whole site ships
+       * a single deferred script.
+       */
+
+      // --- Scroll reveal -----------------------------------------------------
+      const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+      if (revealTargets.length > 0) {
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+
+        if (prefersReducedMotion) {
+          revealTargets.forEach((el) => el.setAttribute('data-revealed', ''));
+        } else {
+          const revealObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                entry.target.setAttribute('data-revealed', '');
+                revealObserver.unobserve(entry.target);
+              });
+            },
+            { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+          );
+
+          revealTargets.forEach((el) => revealObserver.observe(el));
+        }
+      }
+
+      // --- Animated counters -------------------------------------------------
+      const counters = document.querySelectorAll<HTMLElement>('[data-counter]');
+
+      if (counters.length > 0) {
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)',
+        ).matches;
+
+        const runCounter = (el: HTMLElement) => {
+          const target = Number(el.dataset.counter ?? '0');
+
+          if (prefersReducedMotion) {
+            el.textContent = String(target);
+            return;
+          }
+
+          const duration = 1400;
+          const start = performance.now();
+
+          const tick = (now: number) => {
+            const progress = Math.min((now - start) / duration, 1);
+            // easeOutExpo — fast start, gentle settle.
+            const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            el.textContent = String(Math.round(eased * target));
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+
+          requestAnimationFrame(tick);
+        };
+
+        const counterObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              runCounter(entry.target as HTMLElement);
+              counterObserver.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.5 },
+        );
+
+        counters.forEach((el) => counterObserver.observe(el));
+      }
+
+      // --- Scroll spy: highlight the nav link for the section in view --------
+      const spyLinks = document.querySelectorAll<HTMLAnchorElement>('[data-spy-link]');
+
+      if (spyLinks.length > 0) {
+        const sections = Array.from(spyLinks)
+          .map((link) => document.getElementById(link.dataset.spyLink!))
+          .filter((el): el is HTMLElement => el !== null);
+
+        const setActive = (id: string | null) => {
+          spyLinks.forEach((link) => {
+            const isActive = link.dataset.spyLink === id;
+            link.classList.toggle('text-[var(--accent)]', isActive);
+            if (isActive) {
+              link.setAttribute('aria-current', 'true');
+            } else {
+              link.removeAttribute('aria-current');
+            }
+          });
+        };
+
+        const spyObserver = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+            if (visible) setActive(visible.target.id);
+          },
+          { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5] },
+        );
+
+        sections.forEach((section) => spyObserver.observe(section));
+      }
+    </script>
+
+    <style is:global>
+      /* Without JS the reveal observer never runs, so show everything upfront. */
+      .no-js [data-reveal] {
+        opacity: 1;
+        transform: none;
+      }
+    </style>
+  </body>
+</html>

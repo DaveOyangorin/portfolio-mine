@@ -1,0 +1,155 @@
+---
+/** Sticky header: brand, desktop nav with scroll-spy, theme toggle, mobile menu. */
+import { navItems } from '../../data/nav';
+import { profile } from '../../data/profile';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+import Icon from '../icons/Icon.astro';
+
+const currentPath = Astro.url.pathname;
+/** Marks /projects (and its detail pages) as the active nav item. */
+const isProjectsRoute = currentPath.startsWith('/projects');
+---
+
+<header
+  id="site-header"
+  class="fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-[var(--ease-out-soft)]"
+  data-header
+>
+  <div class="container-page">
+    <nav
+      aria-label="Primary"
+      class="mt-3 flex items-center justify-between rounded-2xl px-4 py-3 transition-all duration-300 ease-[var(--ease-out-soft)] sm:px-5"
+      data-nav-shell
+    >
+      <a
+        href="/"
+        class="font-mono text-base font-medium text-[var(--text-strong)] transition-colors hover:text-[var(--accent)]"
+      >
+        <span class="text-[var(--accent)]">&lt;</span>
+        Dave
+        <span class="text-[var(--accent)]">/&gt;</span>
+        <span class="sr-only">{profile.name} — home</span>
+      </a>
+
+      <!-- Desktop navigation -->
+      <ul class="hidden items-center gap-1 lg:flex">
+        {
+          navItems.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                data-spy-link={item.sectionId}
+                aria-current={item.href === '/projects' && isProjectsRoute ? 'page' : undefined}
+                class:list={[
+                  'rounded-lg px-3 py-2 font-mono text-sm font-medium text-[var(--text-body)] transition-colors hover:text-[var(--accent)]',
+                  item.href === '/projects' && isProjectsRoute && 'text-[var(--accent)]',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="flex items-center gap-2">
+        <ThemeToggle />
+
+        <button
+          type="button"
+          data-menu-toggle
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Open navigation menu"
+          class="rounded-lg p-2 text-[var(--text-strong)] transition-colors hover:bg-[var(--surface-sunken)] hover:text-[var(--accent)] lg:hidden"
+        >
+          <Icon name="menu" size={22} class="block" data-menu-icon-open />
+          <Icon name="close" size={22} class="hidden" data-menu-icon-close />
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    hidden
+    class="container-page lg:hidden"
+    data-mobile-menu
+  >
+    <ul class="glass mt-2 space-y-1 rounded-2xl p-3 shadow-[var(--shadow-card-hover)]">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="block rounded-xl px-4 py-3 font-mono text-base font-medium text-[var(--text-body)] transition-colors hover:bg-[var(--surface-sunken)] hover:text-[var(--accent)]"
+              data-mobile-link
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<!-- Spacer so page content clears the fixed header. -->
+<div aria-hidden="true" class="h-20"></div>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const shell = document.querySelector<HTMLElement>('[data-nav-shell]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+  const iconOpen = document.querySelector<SVGElement>('[data-menu-icon-open]');
+  const iconClose = document.querySelector<SVGElement>('[data-menu-icon-close]');
+
+  // --- Frost the nav shell once the page is scrolled -------------------------
+  if (shell) {
+    const frostClasses = ['glass', 'shadow-[var(--shadow-card)]'];
+
+    const syncHeader = () => {
+      const scrolled = window.scrollY > 12;
+      frostClasses.forEach((cls) => shell.classList.toggle(cls, scrolled));
+      header?.classList.toggle('py-0', scrolled);
+    };
+
+    syncHeader();
+    window.addEventListener('scroll', syncHeader, { passive: true });
+  }
+
+  // --- Mobile menu ----------------------------------------------------------
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      iconOpen?.classList.toggle('hidden', open);
+      iconOpen?.classList.toggle('block', !open);
+      iconClose?.classList.toggle('hidden', !open);
+      iconClose?.classList.toggle('block', open);
+    };
+
+    toggle.addEventListener('click', () => setOpen(Boolean(menu.hidden)));
+
+    // Close after navigating to an anchor.
+    menu.querySelectorAll('[data-mobile-link]').forEach((link) => {
+      link.addEventListener('click', () => setOpen(false));
+    });
+
+    // Close on Escape and return focus to the toggle.
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !menu.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Close when resizing up into the desktop breakpoint.
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>

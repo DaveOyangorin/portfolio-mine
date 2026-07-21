@@ -6,7 +6,7 @@
 import { SITE_DESCRIPTION, SITE_URL } from '../../data/site';
 import { profile } from '../../data/profile';
 import { experience } from '../../data/experience';
-import { skills } from '../../data/skills';
+import { allSkillNames } from '../../data/skills';
 import { socials, contact } from '../../data/socials';
 import type { Project } from '../../data/types';
 
@@ -32,7 +32,7 @@ const person = {
     addressLocality: 'Negros Oriental',
     addressCountry: 'PH',
   },
-  knowsAbout: skills.map((skill) => skill.name),
+  knowsAbout: allSkillNames,
   sameAs: socials.map((social) => social.url),
   // Only advertise an email once one is configured in socials.ts.
   ...(contact.email ? { email: `mailto:${contact.email}` } : {}),

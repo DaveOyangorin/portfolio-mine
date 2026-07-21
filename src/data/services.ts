@@ -16,35 +16,41 @@ export const services: Service[] = [
     description:
       'Custom websites built with Elementor, Divi, Beaver Builder, and WP Bakery — from landing pages to full business sites, responsive on every screen.',
     icon: 'wordpress',
+    image: 'wordpress',
   },
   {
     title: 'SEO Optimization',
     description:
       'Technical and on-page SEO — site structure, page speed, metadata, and keyword targeting — so your pages rank for the searches that matter to your business.',
     icon: 'search',
+    image: 'seo',
   },
   {
     title: 'Front-End Development',
     description:
       'Clean, responsive interfaces with HTML, CSS, JavaScript, Vue.js, and Bootstrap, integrated cleanly with your backend systems and APIs.',
     icon: 'code',
+    image: 'front-end',
   },
   {
     title: 'Website Maintenance',
     description:
       'Ongoing updates, content changes, and troubleshooting through organized ticketing — across WordPress, Duda, GoHighLevel, and Thinkific.',
     icon: 'wrench',
+    image: 'maintenance',
   },
   {
     title: 'Google Ads & Digital Marketing',
     description:
       'Campaign setup, monitoring, and optimization that puts budget behind the pages most likely to convert.',
     icon: 'megaphone',
+    image: 'google-ads',
   },
   {
     title: 'Social Media Management',
     description:
       'Scheduling and publishing through tools like Publer to keep a consistent brand presence across platforms.',
     icon: 'share',
+    image: 'social-media',
   },
 ];

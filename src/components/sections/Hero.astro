@@ -13,10 +13,17 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
 ---
 
 <section id="home" class="relative overflow-hidden scroll-mt-24">
-  <!-- Ambient accent glow. Decorative only. -->
+  <!--
+    Ambient accent glow. Decorative only.
+    Centred with a negative margin (-ml-64, half of w-[32rem]) rather than
+    -translate-x-1/2: the parallax tween owns `transform` on this element and
+    would overwrite a Tailwind translate class, shunting the glow off-centre.
+  -->
   <div
     aria-hidden="true"
-    class="pointer-events-none absolute -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-[var(--color-accent-500)] opacity-[0.07] blur-[120px]"
+    data-hero-glow
+    data-parallax="80"
+    class="pointer-events-none absolute -top-40 left-1/2 -ml-64 h-[32rem] w-[32rem] rounded-full bg-[var(--color-accent-500)] blur-[120px]"
   >
   </div>
 
@@ -25,7 +32,7 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
       <div>
         <p
           class="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-raised)] px-4 py-1.5 font-mono text-xs text-[var(--text-muted)]"
-          data-reveal
+          data-hero
         >
           <span class="relative flex h-2 w-2">
             <span
@@ -39,8 +46,7 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
 
         <h1
           class="text-4xl font-medium"
-          data-reveal
-          style="--reveal-delay: 80ms"
+          data-hero
         >
           Hello, my name is
           <span class="text-gradient block sm:inline">Dave Oyangorin</span>
@@ -48,8 +54,7 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
 
         <p
           class="mt-6 max-w-xl text-lg text-[var(--text-body)] sm:text-xl"
-          data-reveal
-          style="--reveal-delay: 160ms"
+          data-hero
         >
           A <strong class="font-medium text-[var(--text-strong)]">WordPress Developer</strong>,
           <strong class="font-medium text-[var(--text-strong)]">SEO Specialist</strong>, and
@@ -59,16 +64,14 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
 
         <p
           class="mt-4 max-w-xl text-[var(--text-muted)]"
-          data-reveal
-          style="--reveal-delay: 220ms"
+          data-hero
         >
           {profile.heroStatement}
         </p>
 
         <div
           class="mt-9 flex flex-wrap items-center gap-3"
-          data-reveal
-          style="--reveal-delay: 280ms"
+          data-hero
         >
           <Button href={contactHref} size="lg" external={Boolean(contact.email)}>
             Get in touch
@@ -95,10 +98,12 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
           }
         </div>
 
-        <SocialLinks class="mt-9" />
+        <div data-hero>
+          <SocialLinks class="mt-9" />
+        </div>
       </div>
 
-      <div class="relative mx-auto w-full max-w-sm lg:max-w-none" data-reveal style="--reveal-delay: 120ms">
+      <div class="relative mx-auto w-full max-w-sm lg:max-w-none" data-hero-image>
         <div
           class="relative overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] shadow-[var(--shadow-card-hover)]"
         >
@@ -116,7 +121,8 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
         <!-- Decorative accent frame behind the portrait. -->
         <div
           aria-hidden="true"
-          class="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-3xl border border-[var(--color-accent-500)] opacity-30"
+          data-hero-frame
+          class="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-3xl border border-[var(--color-accent-500)]"
         >
         </div>
       </div>

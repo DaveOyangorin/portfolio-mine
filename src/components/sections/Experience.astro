@@ -20,7 +20,12 @@ import Section from '../ui/Section.astro';
 
     {
       experience.map((entry, index) => (
-        <li class="relative sm:pl-12" data-reveal style={`--reveal-delay: ${index * 90}ms`}>
+        <li
+          class="relative sm:pl-12"
+          data-reveal
+          data-reveal-from={index % 2 === 0 ? 'left' : 'right'}
+          style={`--reveal-delay: ${index * 90}ms`}
+        >
           {/* Timeline node */}
           <span
             aria-hidden="true"

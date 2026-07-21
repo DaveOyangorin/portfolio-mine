@@ -65,8 +65,15 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
           }
         </div>
 
-        <!-- Calendly inline embed — book a 30 minute slot without leaving the page. -->
-        <div class="mt-10 overflow-hidden rounded-2xl border border-[var(--border-subtle)]">
+        <!--
+          Calendly inline embed — book a 30 minute slot without leaving the page.
+          The reveal is on this wrapper, never the iframe: animating the iframe
+          itself would force it to re-composite and can restart its load.
+        -->
+        <div
+          class="mt-10 overflow-hidden rounded-2xl border border-[var(--border-subtle)]"
+          data-reveal
+        >
           <iframe
             src="https://calendly.com/dave-oyangorin18/30min?hide_gdpr_banner=1"
             title="Schedule a 30 minute call"

@@ -1,9 +1,30 @@
 ---
 /** Services grid. Content is derived — see the note at the top of data/services.ts. */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import { services } from '../../data/services';
 import Section from '../ui/Section.astro';
 import Icon from '../icons/Icon.astro';
 import type { IconName } from '../icons/Icon.astro';
+
+/**
+ * Service artwork, resolved from src/assets/services/ at build time.
+ *
+ * A glob rather than static imports in data/services.ts: the folder may be
+ * empty, and a `image` key naming a file that is not there yet must not break
+ * the build. Missing artwork degrades to the icon badge the cards shipped with.
+ */
+const serviceImages = import.meta.glob<{ default: ImageMetadata }>(
+  '../../assets/services/*.{png,jpg,jpeg,webp,avif}',
+  { eager: true },
+);
+
+const imageByName = new Map(
+  Object.entries(serviceImages).map(([path, module]) => [
+    path.split('/').pop()!.replace(/\.[^.]+$/, ''),
+    module.default,
+  ]),
+);
 ---
 
 <Section
@@ -14,23 +35,47 @@ import type { IconName } from '../icons/Icon.astro';
 >
   <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {
-      services.map((service, index) => (
-        <li
-          class="group rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-7 transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-card-hover)]"
-          data-reveal
-          style={`--reveal-delay: ${index * 70}ms`}
-        >
-          <span
-            class="inline-flex rounded-xl border border-[var(--border-subtle)] bg-[var(--surface)] p-3 text-[var(--accent)] transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:scale-110"
-            aria-hidden="true"
-          >
-            <Icon name={service.icon as IconName} size={22} />
-          </span>
+      services.map((service, index) => {
+        const image = service.image ? imageByName.get(service.image) : undefined;
 
-          <h3 class="mt-5 text-lg font-medium">{service.title}</h3>
-          <p class="mt-2.5 text-[var(--text-muted)]">{service.description}</p>
-        </li>
-      ))
+        return (
+          <li
+            class="group flex flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-card-hover)]"
+            data-reveal
+            data-reveal-scale
+            style={`--reveal-delay: ${index * 70}ms`}
+          >
+            {image && (
+              <div class="aspect-[16/10] overflow-hidden bg-[var(--surface-sunken)]">
+                <Image
+                  src={image}
+                  alt=""
+                  widths={[400, 800]}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-500 ease-[var(--ease-out-soft)] group-hover:scale-[1.04]"
+                />
+              </div>
+            )}
+
+            <div class="p-7">
+              {/* Without artwork the icon badge carries the card, as before. */}
+              {!image && (
+                <span
+                  class="mb-5 inline-flex rounded-xl border border-[var(--border-subtle)] bg-[var(--surface)] p-3 text-[var(--accent)] transition-transform duration-300 ease-[var(--ease-out-soft)] group-hover:scale-110"
+                  aria-hidden="true"
+                >
+                  <Icon name={service.icon as IconName} size={22} />
+                </span>
+              )}
+
+              <h3 class="text-lg font-medium">{service.title}</h3>
+              <p class="mt-2.5 text-[var(--text-muted)]">{service.description}</p>
+            </div>
+          </li>
+        );
+      })
     }
   </ul>
 </Section>

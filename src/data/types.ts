@@ -2,19 +2,23 @@
 
 import type { ImageMetadata } from 'astro';
 
-/** A named group used to bucket skills in the UI. */
-export type SkillCategory =
-  | 'CMS & Builders'
-  | 'SEO & Marketing'
-  | 'Front-End'
-  | 'Design & Tools';
-
-export interface Skill {
-  /** Display name, exactly as shown on the live site. */
+/**
+ * One discipline, rendered as a proficiency meter that expands to reveal the
+ * tools and capabilities behind it.
+ */
+export interface SkillMeter {
+  /** Stable slug, used to wire the button to its panel via aria-controls. */
+  id: string;
+  /** Display name, e.g. "Technical SEO". */
   name: string;
-  /** Years of hands-on experience. */
+  /** Years of hands-on experience. Scales the bar. */
   years: number;
-  category: SkillCategory;
+  /** Rendered straight after the number, e.g. "+" for "5+ years". */
+  suffix?: string;
+  /** One line of supporting context under the name. */
+  description: string;
+  /** The capability breakdown shown when expanded. Order is display order. */
+  items: string[];
 }
 
 export interface ExperienceEntry {
@@ -64,6 +68,16 @@ export interface Service {
   description: string;
   /** Key of an icon in components/icons/ServiceIcon.astro. */
   icon: string;
+  /**
+   * Basename (no extension) of a file in src/assets/services/, e.g. 'wordpress'
+   * resolves wordpress.webp / .png / .jpg / .jpeg / .avif.
+   *
+   * Resolved at build time by a glob in sections/Services.astro rather than a
+   * static import here, so a name pointing at a file that does not exist yet is
+   * not a build error — the card just falls back to its icon until the file
+   * lands. Drop the image in and it appears on the next build.
+   */
+  image?: string;
 }
 
 export interface SocialLink {

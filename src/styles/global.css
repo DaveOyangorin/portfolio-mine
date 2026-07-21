@@ -169,29 +169,66 @@
 }
 
 @layer utilities {
-  /* ----- Scroll reveal -----
-     Elements start hidden and are revealed by an IntersectionObserver adding
-     [data-revealed]. The .no-js guard in Layout.astro keeps content visible
-     when JavaScript is unavailable. */
-  [data-reveal] {
+  /* ----- Motion start states -----
+     GSAP owns every one of these transitions (see src/scripts/motion). CSS only
+     declares the *starting* opacity so nothing flashes in un-animated during the
+     gap between first paint and the motion bundle parsing. There is deliberately
+     no `transition` here — a CSS transition on the same properties would fight
+     GSAP for control of the inline style.
+
+     Only opacity is set, never `visibility`: elements awaiting their reveal must
+     stay in the accessibility tree so screen-reader and keyboard users are never
+     blocked on a scroll position.
+
+     The .no-js guard in Layout.astro keeps everything visible without JS. */
+  [data-reveal],
+  [data-hero],
+  [data-hero-image],
+  [data-header] {
     opacity: 0;
-    transform: translateY(18px);
-    transition:
-      opacity 620ms var(--ease-out-soft),
-      transform 620ms var(--ease-out-soft);
-    transition-delay: var(--reveal-delay, 0ms);
   }
 
-  [data-reveal][data-revealed] {
-    opacity: 1;
-    transform: none;
+  /* Decorative hero layers fade in from nothing too. */
+  [data-hero-glow],
+  [data-hero-frame] {
+    opacity: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-reveal] {
+    [data-reveal],
+    [data-hero],
+    [data-hero-image],
+    [data-header] {
       opacity: 1;
-      transform: none;
     }
+
+    /* Resting opacities for the decorative layers; keep in sync with
+       GLOW_OPACITY / FRAME_OPACITY in scripts/motion/hero.ts. */
+    [data-hero-glow] {
+      opacity: 0.07;
+    }
+
+    [data-hero-frame] {
+      opacity: 0.3;
+    }
+  }
+
+  /* Skill accordion panels start collapsed. GSAP tweens `height` from here, so
+     the overflow clip has to be declared up front — without it the list spills
+     out of the zero-height box on the very first frame of the expand.
+
+     Reduced motion keeps the collapsed start state (the accordion still works,
+     it just snaps); only .no-js opens everything, in Layout.astro. */
+  [data-skill-panel] {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  /* Counters tween through varying digit widths; fixing the glyph advance stops
+     the surrounding box from reflowing on every frame. */
+  [data-counter] {
+    font-variant-numeric: tabular-nums;
   }
 
   .text-gradient {

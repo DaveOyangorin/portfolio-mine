@@ -77,7 +77,10 @@ const isProjectsRoute = currentPath.startsWith('/projects');
     class="container-page lg:hidden"
     data-mobile-menu
   >
-    <ul class="glass mt-2 space-y-1 rounded-2xl p-3 shadow-[var(--shadow-card-hover)]">
+    <ul
+      class="glass mt-2 space-y-1 rounded-2xl p-3 shadow-[var(--shadow-card-hover)]"
+      data-mobile-panel
+    >
       {
         navItems.map((item) => (
           <li>
@@ -98,58 +101,5 @@ const isProjectsRoute = currentPath.startsWith('/projects');
 <!-- Spacer so page content clears the fixed header. -->
 <div aria-hidden="true" class="h-20"></div>
 
-<script>
-  const header = document.querySelector<HTMLElement>('[data-header]');
-  const shell = document.querySelector<HTMLElement>('[data-nav-shell]');
-  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-  const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
-  const iconOpen = document.querySelector<SVGElement>('[data-menu-icon-open]');
-  const iconClose = document.querySelector<SVGElement>('[data-menu-icon-close]');
-
-  // --- Frost the nav shell once the page is scrolled -------------------------
-  if (shell) {
-    const frostClasses = ['glass', 'shadow-[var(--shadow-card)]'];
-
-    const syncHeader = () => {
-      const scrolled = window.scrollY > 12;
-      frostClasses.forEach((cls) => shell.classList.toggle(cls, scrolled));
-      header?.classList.toggle('py-0', scrolled);
-    };
-
-    syncHeader();
-    window.addEventListener('scroll', syncHeader, { passive: true });
-  }
-
-  // --- Mobile menu ----------------------------------------------------------
-  if (toggle && menu) {
-    const setOpen = (open: boolean) => {
-      menu.hidden = !open;
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
-      iconOpen?.classList.toggle('hidden', open);
-      iconOpen?.classList.toggle('block', !open);
-      iconClose?.classList.toggle('hidden', !open);
-      iconClose?.classList.toggle('block', open);
-    };
-
-    toggle.addEventListener('click', () => setOpen(Boolean(menu.hidden)));
-
-    // Close after navigating to an anchor.
-    menu.querySelectorAll('[data-mobile-link]').forEach((link) => {
-      link.addEventListener('click', () => setOpen(false));
-    });
-
-    // Close on Escape and return focus to the toggle.
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !menu.hidden) {
-        setOpen(false);
-        toggle.focus();
-      }
-    });
-
-    // Close when resizing up into the desktop breakpoint.
-    window.matchMedia('(min-width: 1024px)').addEventListener('change', (event) => {
-      if (event.matches) setOpen(false);
-    });
-  }
-</script>
+<!-- Header behaviour (intro, scroll frosting, scroll-spy, mobile menu) lives in
+     src/scripts/motion/nav.ts, wired up from Layout.astro. -->

@@ -5,11 +5,14 @@
  * None of these are open source, so no `repoUrl` is set.
  */
 
+import advancedfootnurseShopImg from '../assets/projects/advancedfootnurse-shop.png';
 import advancefootnurseImg from '../assets/projects/advancefootnurse.webp';
 import axparaImg from '../assets/projects/axpara.png';
 import climaspecImg from '../assets/projects/climaspec.png';
 import d3Img from '../assets/projects/d3-digital-marketing.webp';
+import estatedocprepImg from '../assets/projects/estatedocprep.png';
 import linkedxlImg from '../assets/projects/linkedxl.webp';
+import mandyslaundryImg from '../assets/projects/mandyslaundry.png';
 import smcdataImg from '../assets/projects/smcdata.jpg';
 import totalhomeinteriorsImg from '../assets/projects/totalhomeinteriors.avif';
 import txconcretelevelingImg from '../assets/projects/txconcreteleveling.png';
@@ -151,6 +154,61 @@ export const projects: Project[] = [
     tags: [],
     liveUrl: 'https://climaspec.com/',
     image: climaspecImg,
+    featured: false,
+  },
+  {
+    slug: 'advancedfootnurse-shop',
+    title: 'AFCN Shop',
+    description:
+      "The Shopify storefront for Advanced Foot Care Nurse and Wellness Centre — \"The One Stop Foot Care Shop\". I maintain the catalogue of therapeutic footwear, Footlogix care products, compression socks and off-loading devices, plus collection pages, checkout and payment options, gift cards, and on-page SEO for their clinic and mobile-visit service areas across Ontario and New Brunswick.",
+    tags: [
+      'Shopify',
+      'Liquid',
+      'E-commerce',
+      'CSS',
+      'SEO',
+      'Social Media Management',
+      'Digital Marketing',
+    ],
+    liveUrl: 'https://shop.advancedfootnurse.com/',
+    image: advancedfootnurseShopImg,
+    featured: false,
+  },
+  {
+    slug: 'estatedocprep',
+    title: 'Estate Doc Prep',
+    description:
+      'A conversion-focused site for an online estate planning service that lets homeowners, parents, and retirees create an affordable, attorney-written living trust in about an hour. Built out the offer pages, webinar and seminar funnels, and lead capture, with technical and on-page SEO targeting living trust and probate-avoidance searches across all 50 states.',
+    tags: [
+      'WordPress',
+      'Elementor',
+      'HTML',
+      'CSS',
+      'Landing Pages',
+      'SEO',
+      'Digital Marketing',
+      'Google Ads',
+    ],
+    liveUrl: 'https://estatedocprep.com/',
+    image: estatedocprepImg,
+    featured: false,
+  },
+  {
+    slug: 'mandys-laundry',
+    title: "Mandy's Laundry",
+    description:
+      "A local-service site for a Van Nuys laundromat — \"We Do Laundry, You Do Life!\". Structured the service pages around wash & fold, pickup and delivery, self-service, and commercial accounts for restaurants, medical offices, and hotels, with local SEO and service-area pages covering Los Angeles and Ventura County.",
+    tags: [
+      'WordPress',
+      'Elementor',
+      'HTML',
+      'CSS',
+      'Local SEO',
+      'Digital Marketing',
+      'Google Ads',
+    ],
+    liveUrl: 'https://mandyslaundry.com/',
+    image: mandyslaundryImg,
     featured: false,
   },
   {

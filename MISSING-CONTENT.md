@@ -77,17 +77,21 @@ from `src/pages/index.astro`.
 
 ---
 
-## 6. Heavenly Silk project image — **missing**
+## 6. Project images — **missing for seven projects**
 
-The live site serves no image for this project; the other nine were downloaded and are
-now stored locally in `src/assets/projects/`.
+No image exists locally for these entries:
 
-**Effect right now:** renders `ProjectPlaceholder.astro` — a branded tile with the
+- `heavenly-silk` — the live site serves no image for it.
+- `hidden-roots`, `estatedocprep-ambassador-funnel`, `estatedocprep-white-label-funnel`,
+  `defense-attorney-funnel`, `soundproof-nj`, `bestkeptsecret-visibility` — the
+  GoHighLevel sites and funnels, added from links only. The LeadConnector preview URLs
+  block scraping, so no screenshot could be captured automatically.
+
+**Effect right now:** each renders `ProjectPlaceholder.astro` — a branded tile with the
 project's initials.
 
-**To fix:** add the file to `src/assets/projects/`, then in
-[`src/data/projects.ts`](src/data/projects.ts) import it and set `image:` on the
-`heavenly-silk` entry.
+**To fix:** drop a screenshot into `src/assets/projects/`, then in
+[`src/data/projects.ts`](src/data/projects.ts) import it and set `image:` on that entry.
 
 ---
 
@@ -101,7 +105,7 @@ empty and the tech-stack block is hidden for that project. Add the tags to
 
 ## 8. GitHub repository links — **none exist**
 
-All ten projects are client websites with no public repository. The live site links only
+All projects are client websites with no public repository. The live site links only
 to live sites, never to source. Project cards therefore show "Visit site" only.
 
 The `Project` type already supports `repoUrl?: string` — set it on any project that gains

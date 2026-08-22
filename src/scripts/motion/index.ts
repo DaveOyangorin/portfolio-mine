@@ -9,6 +9,7 @@
 import { ScrollTrigger } from './core';
 import { initReveal } from './reveal';
 import { initHero } from './hero';
+import { initHeroTitle } from './heroTitle';
 import { initNav } from './nav';
 import { initCounters } from './counters';
 import { initParallax } from './parallax';
@@ -54,6 +55,7 @@ function start(): void {
 
   initNav();
   initHero();
+  initHeroTitle();
   initReveal();
   initCounters();
   initParallax();

@@ -44,9 +44,11 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
           Available for new projects
         </p>
 
+        <!-- data-hero-title (not data-hero): the headline is animated per-letter
+             by heroTitle.ts instead of fading up with the rest of the stack. -->
         <h1
           class="text-4xl font-medium"
-          data-hero
+          data-hero-title
         >
           Hello, my name is
           <span class="text-gradient block sm:inline">Dave Oyangorin</span>

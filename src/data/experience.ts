@@ -6,10 +6,10 @@ export const experience: ExperienceEntry[] = [
   {
     company: 'D3 Digital Marketing',
     role: 'Web Developer / AI Automation / Digital Marketing / Social Media Manager',
-    period: 'Jan 2025 – Mar 2026',
+    period: 'Jan 2025 – Aug 2026',
     startDate: '2025-01-01',
-    endDate: '2026-03-31',
-    duration: '14 months',
+    endDate: '2026-08-31',
+    duration: '19 months',
     highlights: [
       'Managed SEO for 12 client websites.',
       'Implemented website updates across multiple page builders.',
@@ -17,7 +17,7 @@ export const experience: ExperienceEntry[] = [
     ],
   },
   {
-    company: 'becomedistinct',
+    company: 'Becomedistinct',
     role: 'Web Developer / SEO / Maintenance',
     period: 'Mar 2024 – Jan 2025',
     startDate: '2024-03-01',

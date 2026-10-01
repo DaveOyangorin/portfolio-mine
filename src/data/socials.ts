@@ -34,7 +34,7 @@ export const contact = {
   ctaHeading: 'Project in mind?',
   ctaSubheading: "Let's talk.",
   ctaBody:
-    'Whether you need a new website, better rankings, or reliable ongoing maintenance — send me the details and I will get back to you.',
+    'Whether you need a new website, stronger search visibility, better lead generation, CRM automation, or a more connected digital marketing system, I can help bring the technical and marketing pieces together.',
 } as const;
 
 /**

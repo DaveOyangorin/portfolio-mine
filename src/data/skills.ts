@@ -14,7 +14,7 @@ export const skillMeters: SkillMeter[] = [
     name: 'Web Development',
     years: 5,
     suffix: '+',
-    description: 'WordPress, Astro, Vue, and modern front-end builds.',
+    description: 'WordPress, Astro, Vue, JavaScript, and modern front-end development.',
     items: [
       'WordPress Development',
       'Astro',
@@ -35,7 +35,7 @@ export const skillMeters: SkillMeter[] = [
     name: 'Technical SEO',
     years: 3,
     suffix: '+',
-    description: 'Audits, Core Web Vitals, structured data, and indexing.',
+    description: 'Technical audits, on-page optimization, Core Web Vitals, structured data, crawling, indexing, and search visibility.',
     items: [
       'Technical SEO Audits',
       'Core Web Vitals',
@@ -57,9 +57,9 @@ export const skillMeters: SkillMeter[] = [
   },
   {
     id: 'artificial-intelligence',
-    name: 'Artificial Intelligence',
+    name: 'Artificial Intelligence / AI & Automation',
     years: 3,
-    description: 'AI-assisted workflows, prompt engineering, and n8n automation.',
+    description: 'AI-assisted workflows, prompt engineering, API integrations, and workflow automation.',
     items: [
       'AI-Assisted Development',
       'Prompt Engineering',
@@ -78,7 +78,7 @@ export const skillMeters: SkillMeter[] = [
     name: 'Marketing Automation',
     years: 2,
     suffix: '+',
-    description: 'Workflow and CRM automation that connects the tools together.',
+    description: 'GoHighLevel funnels, pipelines, workflows, email automation, forms, webhooks, and lead management.',
     items: [
       'n8n',
       'GoHighLevel',
@@ -95,7 +95,7 @@ export const skillMeters: SkillMeter[] = [
     id: 'digital-marketing',
     name: 'Digital Marketing',
     years: 2,
-    description: 'Lead generation, CRO, and campaign optimization.',
+    description: 'Lead generation, Google Ads, CRO, analytics, campaign optimization, and digital strategy.',
     items: [
       'Lead Generation',
       'Landing Page Optimization',
@@ -111,7 +111,7 @@ export const skillMeters: SkillMeter[] = [
     id: 'social-media-management',
     name: 'Social Media Management',
     years: 2,
-    description: 'Content planning, scheduling, and organic brand growth.',
+    description: 'Content planning, short-form content, publishing, YouTube optimization, and organic distribution.',
     items: [
       'Content Planning',
       'Content Scheduling',
@@ -125,7 +125,7 @@ export const skillMeters: SkillMeter[] = [
     id: 'funnel-design',
     name: 'Funnel Design',
     years: 1,
-    description: 'Lead capture funnels and customer journey optimization.',
+    description: 'Landing pages, lead capture, nurture sequences, and customer journey optimization.',
     items: [
       'Sales Funnel Strategy',
       'Landing Page Design',

@@ -12,44 +12,44 @@ import type { Service } from './types';
 
 export const services: Service[] = [
   {
-    title: 'WordPress Development',
+    title: 'WordPress & Web Development',
     description:
-      'Custom websites built with Elementor, Divi, Beaver Builder, and WP Bakery — from landing pages to full business sites, responsive on every screen.',
+      'Responsive, conversion-focused websites using WordPress, Elementor, Divi, Beaver Builder, WP Bakery, HTML, CSS, and JavaScript.',
     icon: 'wordpress',
     image: 'wordpress',
   },
   {
-    title: 'SEO Optimization',
+    title: 'SEO & Organic Growth',
     description:
-      'Technical and on-page SEO — site structure, page speed, metadata, and keyword targeting — so your pages rank for the searches that matter to your business.',
+      'Technical SEO, on-page optimization, keyword research, site architecture, schema, indexing, Core Web Vitals, and content optimization.',
     icon: 'search',
     image: 'seo',
   },
   {
     title: 'Front-End Development',
     description:
-      'Clean, responsive interfaces with HTML, CSS, JavaScript, Vue.js, and Bootstrap, integrated cleanly with your backend systems and APIs.',
+      'Clean, responsive interfaces using HTML, CSS, JavaScript, Vue.js, Bootstrap, and API integrations.',
     icon: 'code',
     image: 'front-end',
   },
   {
-    title: 'Website Maintenance',
+    title: 'Marketing Automation & CRM',
     description:
-      'Ongoing updates, content changes, and troubleshooting through organized ticketing — across WordPress, Duda, GoHighLevel, and Thinkific.',
+      'GoHighLevel funnels, pipelines, workflows, email campaigns, forms, calendars, tags, webhooks, and automated lead nurturing.',
     icon: 'wrench',
     image: 'maintenance',
   },
   {
     title: 'Google Ads & Digital Marketing',
     description:
-      'Campaign setup, monitoring, and optimization that puts budget behind the pages most likely to convert.',
+      'Google Ads campaign setup and optimization, landing pages, lead generation, conversion tracking, analytics, and campaign performance improvements.',
     icon: 'megaphone',
     image: 'google-ads',
   },
   {
-    title: 'Social Media Management',
+    title: 'Social Media & Content Marketing',
     description:
-      'Scheduling and publishing through tools like Publer to keep a consistent brand presence across platforms.',
+      'Content planning, publishing, short-form video content, YouTube optimization, content repurposing, and multi-platform distribution.',
     icon: 'share',
     image: 'social-media',
   },

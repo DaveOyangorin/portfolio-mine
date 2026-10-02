@@ -84,7 +84,8 @@ follows `prefers-color-scheme`.
 
 ### JavaScript
 
-The site ships **~2.4 kB** of JavaScript in total, all deferred:
+The site ships deferred UI and motion scripts (GSAP and anime.js), with optional
+analytics and Web Vitals measurement:
 
 - scroll reveal (IntersectionObserver)
 - animated statistic counters
@@ -106,9 +107,14 @@ text on every image. Decorative elements are `aria-hidden`.
 
 ### SEO
 
+Technical SEO, Google measurement setup, content-preservation checks, and private
+weekly reporting are documented in [docs/SEO.md](docs/SEO.md). No additional
+visible website content is generated or published by these tools.
+
 Per-page titles and descriptions, canonical URLs, Open Graph and Twitter cards
-(1200×630 PNG), JSON-LD (a `Person` + `WebSite` graph on the homepage, `CreativeWork` on
-project pages), a generated `sitemap-index.xml`, and a `robots.txt` whose sitemap URL
+(1200×630 PNG), JSON-LD (`Person`, `WebSite`, and `ProfilePage` on the homepage;
+`CreativeWork` and matching breadcrumbs on project pages), a generated
+`sitemap-index.xml`, and a `robots.txt` whose sitemap URL
 tracks `SITE_URL`.
 
 Project slugs deliberately match the previous site's URLs (`/projects/axpara`,

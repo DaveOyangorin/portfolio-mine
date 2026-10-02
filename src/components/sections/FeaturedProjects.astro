@@ -17,14 +17,14 @@ import Icon from '../icons/Icon.astro';
     {
       featuredProjects.map((project, index) => (
         <div data-reveal data-reveal-scale style={`--reveal-delay: ${(index % 3) * 90}ms`}>
-          <ProjectCard project={project} eager={index < 3} />
+          <ProjectCard project={project} />
         </div>
       ))
     }
   </div>
 
   <div class="mt-12 flex justify-center" data-reveal>
-    <Button href="/projects" variant="secondary" size="lg">
+    <Button href="/projects/" variant="secondary" size="lg">
       View all {projects.length} projects
       <Icon name="arrow-right" size={18} />
     </Button>

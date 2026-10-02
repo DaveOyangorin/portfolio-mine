@@ -39,10 +39,10 @@ const isProjectsRoute = currentPath.startsWith('/projects');
               <a
                 href={item.href}
                 data-spy-link={item.sectionId}
-                aria-current={item.href === '/projects' && isProjectsRoute ? 'page' : undefined}
+                aria-current={item.href === '/projects/' && isProjectsRoute ? 'page' : undefined}
                 class:list={[
                   'rounded-lg px-3 py-2 font-mono text-sm font-medium text-[var(--text-body)] transition-colors hover:text-[var(--accent)]',
-                  item.href === '/projects' && isProjectsRoute && 'text-[var(--accent)]',
+                  item.href === '/projects/' && isProjectsRoute && 'text-[var(--accent)]',
                 ]}
               >
                 {item.label}

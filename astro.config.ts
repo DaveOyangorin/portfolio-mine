@@ -7,7 +7,8 @@ import { SITE_URL } from './src/data/site';
 
 export default defineConfig({
   site: SITE_URL,
-  integrations: [sitemap()],
+  trailingSlash: 'always',
+  integrations: [sitemap({ filter: (url) => !new URL(url).pathname.startsWith('/404') })],
   vite: {
     plugins: [tailwindcss()],
   },
@@ -18,6 +19,6 @@ export default defineConfig({
   compressHTML: true,
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'viewport',
+    defaultStrategy: 'hover',
   },
 });

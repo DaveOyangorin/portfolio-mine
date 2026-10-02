@@ -1,0 +1,64 @@
+name: Portfolio SEO checks and weekly report
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      ai_analysis:
+        description: Generate AI recommendations from aggregate report data
+        type: boolean
+        default: false
+  schedule:
+    # Monday 09:00 in Asia/Manila (01:00 UTC). GitHub schedules can be delayed.
+    - cron: '0 1 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+      - run: npm run seo:audit
+      - name: Collect weekly evidence
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.event.repository.private
+        env:
+          GSC_SITE_URL: ${{ vars.GSC_SITE_URL }}
+          GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          PAGESPEED_API_KEY: ${{ secrets.PAGESPEED_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SEO_AI_MODEL: ${{ vars.SEO_AI_MODEL }}
+          SEO_AI_ENABLED: ${{ vars.SEO_AI_ENABLED }}
+          MANUAL_AI: ${{ inputs.ai_analysis }}
+        run: |
+          if [ "$SEO_AI_ENABLED" = "true" ] || [ "$MANUAL_AI" = "true" ]; then
+            npm run seo:report -- --live --ai
+          else
+            npm run seo:report -- --live
+          fi
+      - name: Check production technical SEO on public repositories
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && !github.event.repository.private
+        run: npm run seo:audit -- --live
+      - name: Preserve reports, including partial failures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: portfolio-seo-${{ github.run_id }}
+          path: reports/
+          retention-days: 90
+          if-no-files-found: warn

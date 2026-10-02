@@ -6,7 +6,7 @@
  */
 
 /** Canonical origin. Update this when a custom domain is attached in Vercel. */
-export const SITE_URL = 'https://dave-portfolio-phi.vercel.app';
+export const SITE_URL = 'https://portfolio-mine-theta.vercel.app';
 
 export const SITE_TITLE = 'Dave Oyangorin — WordPress Developer & SEO Specialist';
 

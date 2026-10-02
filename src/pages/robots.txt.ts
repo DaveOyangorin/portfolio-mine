@@ -4,9 +4,10 @@ import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = ({ site }) => {
   const sitemapUrl = new URL('sitemap-index.xml', site).href;
+  const preventIndexing = import.meta.env.DEV || (import.meta.env.VERCEL_ENV && import.meta.env.VERCEL_ENV !== 'production');
 
   const body = `User-agent: *
-Allow: /
+${preventIndexing ? 'Disallow: /' : 'Allow: /'}
 
 Sitemap: ${sitemapUrl}
 `;

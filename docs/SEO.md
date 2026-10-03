@@ -33,8 +33,9 @@ private reports. There is no content generator or automatic implementation step.
 ## Public measurement setup
 
 1. Keep `SITE_URL` in `src/data/site.ts` set to the actual canonical production
-   origin. It now uses the repository's deployed portfolio,
-   `https://portfolio-mine-theta.vercel.app`. Update it once
+   origin. The configured target for the portfolio is
+   `https://dave-oyangorin-portfolio.vercel.app`. Assign this address in Vercel
+   and deploy before verifying the property. Update it
    if a custom domain replaces this origin; do not invent location URLs.
 2. Copy `.env.example` to `.env` locally. In Vercel, configure the same public
    variables for the production environment. Rebuild after changing them.
@@ -42,7 +43,7 @@ private reports. There is no content generator or automatic implementation step.
    property, set `PUBLIC_GOOGLE_SITE_VERIFICATION` to the **content token**, not
    the entire HTML tag. Domain properties use Google's DNS verification instead.
 4. Deploy, complete verification in Search Console, and submit
-   `https://portfolio-mine-theta.vercel.app/sitemap-index.xml` (or the custom-domain
+   `https://dave-oyangorin-portfolio.vercel.app/sitemap-index.xml` (or the custom-domain
    equivalent). A verification tag alone does not verify an account or submit a
    sitemap. Canonicals and sitemaps do not guarantee indexing.
 5. Create a GA4 web data stream and set `PUBLIC_GA4_MEASUREMENT_ID` to its `G-…`
@@ -91,7 +92,7 @@ does not treat a Lighthouse run or TBT as measured INP.
    the git-ignored `.secrets/` folder. Set `GOOGLE_APPLICATION_CREDENTIALS` to its
    path. Never put credentials in a `PUBLIC_` variable or commit them.
 4. Set `GSC_SITE_URL` to the exact verified property, e.g.
-   `https://portfolio-mine-theta.vercel.app/` or `sc-domain:your-domain.com`. Set
+   `https://dave-oyangorin-portfolio.vercel.app/` or `sc-domain:your-domain.com`. Set
    `GA4_PROPERTY_ID` to the **numeric** ID. Both services must grant access
    separately, even if they share one service account.
 

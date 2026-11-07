@@ -46,12 +46,15 @@ export function bodyFingerprint(root) {
   return createHash('sha256').update(JSON.stringify(normalize(tags(root, 'body')[0]))).digest('hex');
 }
 
+// Search-engine ownership files (e.g. Google Search Console) are not portfolio pages.
+const isVerificationFile = (name) => /^google[0-9a-f]+\.html$/.test(name);
+
 export async function htmlFiles(directory, prefix = '') {
   const result = [];
   for (const entry of await readdir(join(directory, prefix), { withFileTypes: true })) {
     const file = join(prefix, entry.name);
     if (entry.isDirectory() && entry.name !== '_astro') result.push(...await htmlFiles(directory, file));
-    else if (entry.isFile() && file.endsWith('.html')) result.push(file.replaceAll('\\', '/'));
+    else if (entry.isFile() && file.endsWith('.html') && !isVerificationFile(entry.name)) result.push(file.replaceAll('\\', '/'));
   }
   return result.sort();
 }

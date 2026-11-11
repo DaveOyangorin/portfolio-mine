@@ -31,10 +31,10 @@ export const contact = {
   email: '' as string,
   phone: '' as string,
   location: 'Negros Oriental, Philippines',
-  ctaHeading: 'Project in mind?',
-  ctaSubheading: "Let's talk.",
+  ctaHeading: "Let's build something",
+  ctaSubheading: 'that works.',
   ctaBody:
-    'Whether you need a new website, stronger search visibility, better lead generation, CRM automation, or a more connected digital marketing system, I can help bring the technical and marketing pieces together.',
+    "I'm open to opportunities in web development, SEO, digital marketing, and automation. Whether you're hiring a developer or need help improving your website and digital workflows, I'd be glad to discuss your project.",
 } as const;
 
 /**

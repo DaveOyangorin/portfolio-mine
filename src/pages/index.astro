@@ -1,20 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/sections/Hero.astro';
-import About from '../components/sections/About.astro';
-import Skills from '../components/sections/Skills.astro';
+import Proof from '../components/sections/Proof.astro';
+import FeaturedProjects from '../components/sections/FeaturedProjects.astro';
 import Services from '../components/sections/Services.astro';
 import Experience from '../components/sections/Experience.astro';
-import FeaturedProjects from '../components/sections/FeaturedProjects.astro';
+import About from '../components/sections/About.astro';
+import Skills from '../components/sections/Skills.astro';
 import Contact from '../components/sections/Contact.astro';
 ---
 
+<!-- Order follows a recruiter's scan: who, proof, work, range, history, person, tools, contact. -->
 <Layout type="profile">
   <Hero />
-  <About />
-  <Skills />
+  <Proof />
+  <FeaturedProjects />
   <Services />
   <Experience />
-  <FeaturedProjects />
+  <About />
+  <Skills />
   <Contact />
 </Layout>

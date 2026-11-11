@@ -8,19 +8,23 @@
 /** Canonical origin. Update this when a custom domain is attached in Vercel. */
 export const SITE_URL = 'https://dave-oyangorin-portfolio.vercel.app';
 
-export const SITE_TITLE = 'Dave Oyangorin — WordPress Developer & SEO Specialist';
+export const SITE_TITLE = 'Dave Oyangorin — Web Developer, SEO & Automation Specialist';
 
 export const SITE_DESCRIPTION =
-  'Dave Oyangorin is a WordPress developer, SEO specialist, and front-end web developer based in Negros Oriental, Philippines, building fast, responsive, search-optimized websites.';
+  'Dave Oyangorin is a web developer, WordPress developer, and SEO specialist in the Philippines who builds fast websites, technical SEO, and GoHighLevel CRM automation.';
 
 /**
  * Keywords reflecting the services actually offered.
  * (The previous site carried template keywords targeting Ranchi, India — removed.)
  */
 export const SITE_KEYWORDS = [
+  'web developer',
   'WordPress developer',
   'SEO specialist',
   'front-end web developer',
+  'GoHighLevel specialist',
+  'CRM automation specialist',
+  'website performance optimization',
   'Elementor developer',
   'Divi developer',
   'GoHighLevel',

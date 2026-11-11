@@ -1,28 +1,29 @@
 /**
- * Skills, as a proficiency meter per discipline.
+ * Skills, grouped by category.
  *
- * Each entry is one bar in the Skills section; `items` is the capability
- * breakdown revealed when that bar is expanded. Ordered longest tenure first,
- * which is also the order the bars descend in.
+ * Tools are listed, never rated: there are no proficiency percentages or
+ * invented levels. Tenure lives in the experience timeline instead.
+ *
+ * Sources: the previous skills data, the experience timeline, project tags,
+ * and the categories Dave supplied for the redesign (Asana, Slack, Cursor,
+ * Claude Code, and Google Apps Script were added from that brief).
  */
 
-import type { SkillMeter } from './types';
+import type { SkillGroup } from './types';
 
-export const skillMeters: SkillMeter[] = [
+export const skillGroups: SkillGroup[] = [
   {
     id: 'web-development',
     name: 'Web Development',
-    years: 5,
-    suffix: '+',
-    description: 'WordPress, Astro, Vue, JavaScript, and modern front-end development.',
+    description: 'Responsive, accessible front ends that load fast.',
     items: [
-      'WordPress Development',
-      'Astro',
       'HTML5',
       'CSS3',
       'JavaScript (ES6+)',
       'TypeScript',
       'Vue.js',
+      'Astro',
+      'Bootstrap',
       'Tailwind CSS',
       'Responsive Web Design',
       'REST API Integration',
@@ -31,122 +32,85 @@ export const skillMeters: SkillMeter[] = [
     ],
   },
   {
-    id: 'technical-seo',
-    name: 'Technical SEO',
-    years: 3,
-    suffix: '+',
-    description: 'Technical audits, on-page optimization, Core Web Vitals, structured data, crawling, indexing, and search visibility.',
+    id: 'cms',
+    name: 'CMS & Website Builders',
+    description: 'WordPress builds and the hosted platforms clients already use.',
     items: [
-      'Technical SEO Audits',
+      'WordPress',
+      'Elementor',
+      'Divi',
+      'Beaver Builder',
+      'WPBakery',
+      'Shopify',
+      'Duda',
+      'Thinkific',
+    ],
+  },
+  {
+    id: 'seo-marketing',
+    name: 'SEO & Digital Marketing',
+    description: 'Technical and on-page SEO, tracking, and paid search.',
+    items: [
+      'Technical SEO',
+      'On-Page SEO',
+      'Local SEO',
       'Core Web Vitals',
-      'Schema Markup',
-      'JSON-LD',
-      'Structured Data',
-      'XML Sitemaps',
-      'robots.txt',
-      'Internal Linking',
-      'Indexing Optimization',
+      'Schema Markup & JSON-LD',
+      'XML Sitemaps & robots.txt',
       'Google Search Console',
       'Google Analytics 4',
       'Google Tag Manager',
-      'Rank Math Pro',
+      'Conversion Tracking',
+      'Google Ads',
+      'Semrush',
       'Ahrefs',
-      'SEMrush',
       'Screaming Frog',
+      'Rank Math Pro',
+      'Landing Page Optimization',
+      'Content & Social Media',
     ],
   },
   {
-    id: 'artificial-intelligence',
-    name: 'Artificial Intelligence / AI & Automation',
-    years: 3,
-    description: 'AI-assisted workflows, prompt engineering, API integrations, and workflow automation.',
+    id: 'automation-crm',
+    name: 'Automation & CRM',
+    description: 'Funnels, pipelines, and workflows that route and follow up leads.',
     items: [
-      'AI-Assisted Development',
-      'Prompt Engineering',
+      'GoHighLevel',
+      'CRM Configuration',
+      'Workflow Automation',
+      'Email Automation',
+      'Lead Management',
+      'Forms & Funnels',
+      'Appointment Booking',
+      'Webhooks & API Integration',
+      'Google Apps Script',
+      'n8n',
+      'Zapier',
+      'Make',
+    ],
+  },
+  {
+    id: 'design-productivity',
+    name: 'Design & Productivity',
+    description: 'Hand-off, version control, and team collaboration.',
+    items: ['Figma', 'Git & GitHub', 'Asana', 'Slack'],
+  },
+  {
+    id: 'ai',
+    name: 'AI-Assisted Development',
+    description: 'AI tools used to speed up development and marketing work.',
+    items: [
       'ChatGPT',
       'Claude',
-      'Gemini',
+      'Claude Code',
+      'Cursor',
       'GitHub Copilot',
+      'Gemini',
+      'Prompt Engineering',
       'AI Workflow Design',
-      'AI Automation',
-      'AI Content Optimization',
-      'AI Research',
-    ],
-  },
-  {
-    id: 'marketing-automation',
-    name: 'Marketing Automation',
-    years: 2,
-    suffix: '+',
-    description: 'GoHighLevel funnels, pipelines, workflows, email automation, forms, webhooks, and lead management.',
-    items: [
-      'n8n',
-      'GoHighLevel',
-      'Workflow Automation',
-      'CRM Automation',
-      'API Integration',
-      'Webhooks',
-      'Zapier',
-      'Make (Integromat)',
-      'Email Automation',
-    ],
-  },
-  {
-    id: 'digital-marketing',
-    name: 'Digital Marketing',
-    years: 2,
-    description: 'Lead generation, Google Ads, CRO, analytics, campaign optimization, and digital strategy.',
-    items: [
-      'Lead Generation',
-      'Landing Page Optimization',
-      'Conversion Rate Optimization',
-      'Marketing Strategy',
-      'Email Marketing',
-      'Content Marketing',
-      'Campaign Optimization',
-      'Analytics & Reporting',
-    ],
-  },
-  {
-    id: 'social-media-management',
-    name: 'Social Media Management',
-    years: 2,
-    description: 'Content planning, short-form content, publishing, YouTube optimization, and organic distribution.',
-    items: [
-      'Content Planning',
-      'Content Scheduling',
-      'Community Management',
-      'Brand Growth',
-      'Engagement Strategies',
-      'Social Media Analytics',
-    ],
-  },
-  {
-    id: 'funnel-design',
-    name: 'Funnel Design',
-    years: 1,
-    description: 'Landing pages, lead capture, nurture sequences, and customer journey optimization.',
-    items: [
-      'Sales Funnel Strategy',
-      'Landing Page Design',
-      'Lead Capture Funnels',
-      'Customer Journey Mapping',
-      'CTA Optimization',
-      'Funnel Optimization',
     ],
   },
 ];
 
-/** Highest years value, used to scale the meters. The longest tenure reads 100%. */
-export const maxSkillYears = Math.max(...skillMeters.map((meter) => meter.years));
-
-/** Bar fill for one meter, as a whole percentage of the longest tenure. */
-export function skillLevel(meter: SkillMeter): number {
-  return Math.round((meter.years / maxSkillYears) * 100);
-}
-
-/** Every capability across every discipline — the `knowsAbout` list for JSON-LD. */
-export const allSkillNames: string[] = skillMeters.flatMap((meter) => [
-  meter.name,
-  ...meter.items,
-]);
+/** Every capability across every category — the `knowsAbout` list for JSON-LD. */
+export const allSkillNames: string[] = skillGroups.flatMap((group) => group.items);

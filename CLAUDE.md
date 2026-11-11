@@ -34,6 +34,11 @@ visible wording change needs strong search evidence and approximately equal text
 length. Never automatically write or publish content. Reporting scripts must only
 write private report artifacts, never portfolio source files or deployments.
 
+**Exception, Nov 2026 redesign:** Dave explicitly approved overriding this policy for
+one redesign (new hero, about, and contact copy; a Proof strip; case-study sections;
+grouped skills). The policy above applies again to all later work. The audit
+baseline is regenerated only with Dave's explicit approval.
+
 Run `npm run check`, `npm test`, `npm run build`, and `npm run seo:audit` after SEO
 changes. The audit compares every rendered page against the pre-SEO portfolio
 baseline; do not regenerate that baseline to conceal a content or layout change.

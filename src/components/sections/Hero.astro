@@ -1,15 +1,14 @@
 ---
-/** Above-the-fold hero: headline, statement, CTAs, and portrait. */
+/** Above-the-fold hero: roles, headline, statement, CTAs, and portrait. */
 import { Image } from 'astro:assets';
 import { profile } from '../../data/profile';
-import { contact, resume, socials } from '../../data/socials';
+import { contact, resume } from '../../data/socials';
 import Button from '../ui/Button.astro';
 import SocialLinks from '../ui/SocialLinks.astro';
 import Icon from '../icons/Icon.astro';
 
-/** Falls back to LinkedIn while no email address is configured. */
+/** Jumps to the contact section while no email address is configured. */
 const contactHref = contact.email ? `mailto:${contact.email}` : '#contact';
-const linkedIn = socials.find((social) => social.label === 'LinkedIn');
 ---
 
 <section id="home" class="relative overflow-hidden scroll-mt-24">
@@ -41,59 +40,56 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
             <span class="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-accent-500)]"
             ></span>
           </span>
-          Available for new projects
+          Open to remote roles and client projects
+        </p>
+
+        <p class="hero-kicker" data-hero>
+          {profile.name}
+          <span aria-hidden="true" class="text-[var(--accent)]">/</span>
+          <span class="text-[var(--text-muted)]">{profile.location}</span>
         </p>
 
         <!-- data-hero-title (not data-hero): the headline is animated per-letter
-             by heroTitle.ts instead of fading up with the rest of the stack. -->
-        <h1
-          class="text-4xl font-medium"
-          data-hero-title
-        >
-          Hello, my name is
-          <span class="text-gradient block sm:inline">Dave Oyangorin</span>
+             by heroTitle.ts instead of fading up with the rest of the stack.
+             Separators are visually hidden so the accessible name reads
+             "Web Developer | SEO Specialist | Automation Specialist". -->
+        <h1 class="hero-roles" data-hero-title>
+          {
+            profile.heroRoles.map((role, index) => (
+              <>
+                {index > 0 && <span class="sr-only"> | </span>}
+                <span class:list={['hero-role', index === 1 && 'text-gradient']}>{role}</span>
+              </>
+            ))
+          }
         </h1>
 
-        <p
-          class="mt-6 max-w-xl text-lg text-[var(--text-body)] sm:text-xl"
-          data-hero
-        >
-          <strong class="font-medium text-[var(--text-strong)]">Digital Marketing Specialist, WordPress Developer & SEO Specialist</strong>
-          based in {profile.location}.
+        <!-- Headline and statement paint immediately (no fade): the statement is the
+             mobile LCP element, so gating it on the motion bundle delays LCP. -->
+        <p class="hero-headline">
+          {profile.heroHeadline}
         </p>
 
-        <p
-          class="mt-4 max-w-xl text-[var(--text-muted)]"
-          data-hero
-        >
+        <p class="mt-4 max-w-xl text-[var(--text-muted)]">
           {profile.heroStatement}
         </p>
 
-        <div
-          class="mt-9 flex flex-wrap items-center gap-3"
-          data-hero
-        >
-          <Button href={contactHref} size="lg" external={Boolean(contact.email)}>
-            Get in touch
+        <div class="mt-9 flex flex-wrap items-center gap-3" data-hero>
+          <Button href="#work" size="lg">
+            View my projects
             <Icon name="arrow-right" size={18} />
           </Button>
 
+          <Button href={contactHref} variant="secondary" size="lg" external={Boolean(contact.email)}>
+            Contact me
+          </Button>
+
           {
-            resume.available ? (
-              <Button href={resume.path} variant="secondary" size="lg" download>
-                {profile.resumeLabel}
+            resume.available && (
+              <Button href={resume.path} variant="ghost" size="lg" download>
+                View resume
                 <Icon name="download" size={18} />
               </Button>
-            ) : (
-              /* No CV file yet — link to LinkedIn so the CTA still works.
-                 Swap to the download button once the PDF is added; see
-                 MISSING-CONTENT.md. */
-              linkedIn && (
-                <Button href={linkedIn.url} variant="secondary" size="lg" external>
-                  View LinkedIn
-                  <Icon name="arrow-up-right" size={18} />
-                </Button>
-              )
             )
           }
         </div>

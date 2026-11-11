@@ -13,7 +13,6 @@ import { initHeroTitle } from './heroTitle';
 import { initNav } from './nav';
 import { initCounters } from './counters';
 import { initParallax } from './parallax';
-import { initSkills } from './skills';
 
 /** Set once the visitor takes control, so nothing yanks the page under them. */
 let userScrolled = false;
@@ -59,7 +58,6 @@ function start(): void {
   initReveal();
   initCounters();
   initParallax();
-  initSkills();
 
   restoreAnchor();
 

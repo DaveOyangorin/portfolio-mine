@@ -3,7 +3,7 @@
  * Project card.
  *
  * The whole card is clickable via a stretched link on the title, so there is a
- * single tab stop for the card plus one for the external "Visit site" link.
+ * single tab stop for the card plus one for the external live link.
  */
 import { Image } from 'astro:assets';
 import ProjectPlaceholder from './ProjectPlaceholder.astro';
@@ -22,33 +22,45 @@ const { project, eager = false, maxTags = 5 } = Astro.props;
 
 const visibleTags = project.tags.slice(0, maxTags);
 const hiddenTagCount = project.tags.length - visibleTags.length;
+const liveLabel = project.liveLabel ?? 'Live website';
 ---
 
 <article
-  class="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-card-hover)] focus-within:border-[var(--accent)]"
+  class="group relative flex flex-col overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] transition-all duration-300 ease-[var(--ease-out-soft)] hover:border-[var(--accent)] hover:shadow-[var(--shadow-card-hover)] focus-within:border-[var(--accent)]"
 >
   {/*
-    Source artwork is client logos and banners with aspect ratios from 7:1 to
-    0.38:1, so images are *contained* and centred on a plate rather than cropped
-    — object-cover would slice the wordmarks in half. The plate colour is fixed
-    per project (see `imageTone`) instead of following the theme, because the
-    logos have their ink colour baked in.
+    A screenshot of the live site fills the frame, cropped from the top. Without
+    one, the client logo is *contained* on a plate: the logos range from 7:1 to
+    0.38:1, so object-cover would slice the wordmarks in half. The plate colour
+    is fixed per project (see `imageTone`) because the logos have their ink
+    colour baked in.
   */}
   <div
     class:list={[
-      'flex aspect-[16/10] items-center justify-center overflow-hidden p-8',
-      project.image
-        ? project.imageTone === 'dark'
-          ? 'bg-[#12151c]'
-          : 'bg-white'
-        : 'bg-[var(--surface-sunken)]',
+      'card-media flex aspect-[16/10] items-center justify-center overflow-hidden',
+      project.screens
+        ? 'is-screen bg-[var(--surface-sunken)]'
+        : project.image
+          ? ['p-8', project.imageTone === 'dark' ? 'bg-[#12151c]' : 'bg-white']
+          : 'bg-[var(--surface-sunken)] p-8',
     ]}
   >
     {
-      project.image ? (
+      project.screens ? (
+        <Image
+          src={project.screens.desktop}
+          alt={`Homepage of the ${project.title} website`}
+          widths={[400, 640, 960]}
+          quality={60}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          class="h-full w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-out-soft)] group-hover:scale-[1.03]"
+        />
+      ) : project.image ? (
         <Image
           src={project.image}
-          alt={project.title}
+          alt={`${project.title} logo`}
           widths={[400, 800]}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           loading={eager ? 'eager' : 'lazy'}
@@ -62,13 +74,15 @@ const hiddenTagCount = project.tags.length - visibleTags.length;
   </div>
 
   <div class="flex flex-1 flex-col p-6">
-    <h3 class="text-lg font-medium">
+    <p class="card-category font-mono">{project.category}</p>
+
+    <h3 class="mt-2 text-lg font-medium">
       <a
         href={`/projects/${project.slug}/`}
         class="after:absolute after:inset-0 after:content-[''] group-hover:text-[var(--accent)] transition-colors"
       >
         {project.title}
-        <span class="sr-only">— view project details</span>
+        <span class="sr-only">— view case study</span>
       </a>
     </h3>
 
@@ -78,7 +92,7 @@ const hiddenTagCount = project.tags.length - visibleTags.length;
 
     {
       visibleTags.length > 0 && (
-        <ul class="mt-5 flex flex-wrap gap-2">
+        <ul class="mt-5 flex flex-wrap gap-2" aria-label="Technologies">
           {visibleTags.map((tag) => (
             <li class="rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] px-2.5 py-1 font-mono text-xs text-[var(--text-muted)]">
               {tag}
@@ -93,12 +107,12 @@ const hiddenTagCount = project.tags.length - visibleTags.length;
       )
     }
 
-    <div class="mt-6 flex items-center gap-4 pt-1">
+    <div class="mt-auto flex items-center gap-4 pt-6">
       <span
         class="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--accent)]"
         aria-hidden="true"
       >
-        Case study
+        View case study
         <Icon
           name="arrow-right"
           size={16}
@@ -112,9 +126,9 @@ const hiddenTagCount = project.tags.length - visibleTags.length;
         target="_blank"
         rel="noopener noreferrer"
         class="link-underline relative z-10 ml-auto inline-flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
-        aria-label={`Visit the live ${project.title} website (opens in a new tab)`}
+        aria-label={`${liveLabel}: ${project.title} (opens in a new tab)`}
       >
-        Visit site
+        {liveLabel}
         <Icon name="arrow-up-right" size={14} />
       </a>
     </div>

@@ -3,22 +3,64 @@
 import type { ImageMetadata } from 'astro';
 
 /**
- * One discipline, rendered as a proficiency meter that expands to reveal the
- * tools and capabilities behind it.
+ * One skill category in the Skills section. Deliberately has no proficiency
+ * score: tools are listed, not rated.
  */
-export interface SkillMeter {
-  /** Stable slug, used to wire the button to its panel via aria-controls. */
+export interface SkillGroup {
+  /** Stable slug, used for the heading id. */
   id: string;
-  /** Display name, e.g. "Technical SEO". */
+  /** Display name, e.g. "SEO & Digital Marketing". */
   name: string;
-  /** Years of hands-on experience. Scales the bar. */
-  years: number;
-  /** Rendered straight after the number, e.g. "+" for "5+ years". */
-  suffix?: string;
   /** One line of supporting context under the name. */
   description: string;
-  /** The capability breakdown shown when expanded. Order is display order. */
+  /** Tools and capabilities. Order is display order. */
   items: string[];
+}
+
+/** Homepage project category; also shown as the card's route plate. */
+export type ProjectCategory =
+  | 'Website Development'
+  | 'SEO & Digital Marketing'
+  | 'CRM & Automation'
+  | 'E-commerce';
+
+/**
+ * Case-study detail. Every field is optional and a section renders only when
+ * its field is set — nothing is padded with placeholder copy.
+ *
+ * Only record what is documented: the project description, the matching
+ * experience entry, or material supplied by Dave. Never invent objectives,
+ * challenges, or results.
+ */
+export interface CaseStudy {
+  /** e.g. "Lead-generation website". */
+  projectType?: string;
+  /** Dave's role, e.g. "Web developer (in-house)". */
+  role?: string;
+  /** Employer or engagement period, when known from the experience timeline. */
+  period?: string;
+  /** What the client or business set out to achieve, as documented. */
+  objective?: string;
+  /** Documented problems or requirements. */
+  challenges?: string[];
+  /** What Dave personally delivered. */
+  contributions?: string[];
+  /** Actual delivery stages, in order. */
+  process?: string[];
+  /** Verified outcomes only. Leave unset rather than estimate. */
+  results?: string[];
+  /** Collaborators to credit. */
+  credits?: string;
+  /** Slugs of related projects, linked from the case study. */
+  related?: string[];
+}
+
+/** Desktop + mobile captures of the live site, shown on the case study. */
+export interface ProjectScreens {
+  desktop: ImageMetadata;
+  mobile?: ImageMetadata;
+  /** When the live site was captured, e.g. "Nov 2026". */
+  captured: string;
 }
 
 export interface ExperienceEntry {
@@ -61,6 +103,24 @@ export interface Project {
   imageTone?: 'light' | 'dark';
   /** Marks the project for the homepage highlight grid. */
   featured: boolean;
+  category: ProjectCategory;
+  /**
+   * Label for the live link. GoHighLevel funnels are served from preview URLs,
+   * so they read "View funnel" rather than "Live website".
+   */
+  liveLabel?: string;
+  screens?: ProjectScreens;
+  caseStudy?: CaseStudy;
+}
+
+/** A verified testimonial. Only add entries the client has approved. */
+export interface Testimonial {
+  quote: string;
+  name: string;
+  /** Position and/or company, only if verified. */
+  role?: string;
+  /** Slug of the related project, if any. */
+  projectSlug?: string;
 }
 
 export interface Service {

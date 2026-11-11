@@ -1,0 +1,81 @@
+---
+/**
+ * Credibility strip under the hero.
+ *
+ * Built only from verifiable records: employers from the experience timeline
+ * and client projects that have their own case study page. Client names are
+ * plain text links, not logos, so nothing reads as an endorsement. The
+ * testimonial block renders only once data/testimonials.ts holds approved
+ * quotes.
+ */
+import { experience } from '../../data/experience';
+import { projects } from '../../data/projects';
+import { testimonials } from '../../data/testimonials';
+
+const year = (iso: string | null) => (iso ? iso.slice(0, 4) : 'now');
+const teams = experience.map((entry) => ({
+  company: entry.company,
+  years:
+    year(entry.startDate) === year(entry.endDate)
+      ? year(entry.startDate)
+      : `${year(entry.startDate)}–${year(entry.endDate)}`,
+}));
+
+/** One link per client; funnels for the same client share its entry. */
+const clients = projects.filter((project) => !project.slug.startsWith('estatedocprep-'));
+---
+
+<section id="proof" aria-labelledby="proof-heading" class="proof scroll-mt-24">
+  <div class="container-page">
+    <h2 id="proof-heading" class="sr-only">Teams and clients</h2>
+
+    <div class="proof-grid">
+      <div data-reveal>
+        <p class="proof-label font-mono">Teams I've worked in</p>
+        <ul class="proof-teams">
+          {
+            teams.map((team) => (
+              <li>
+                <span class="proof-team-name">{team.company}</span>
+                <span class="proof-team-years">{team.years}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div data-reveal style="--reveal-delay: 80ms">
+        <p class="proof-label font-mono">Client work, {projects.length} projects</p>
+        <ul class="proof-clients">
+          {
+            clients.map((project) => (
+              <li>
+                <a href={`/projects/${project.slug}/`}>{project.title}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    {
+      testimonials.length > 0 && (
+        <ul class="proof-quotes">
+          {testimonials.map((item) => (
+            <li data-reveal>
+              <figure>
+                <blockquote>
+                  <p>“{item.quote}”</p>
+                </blockquote>
+                <figcaption>
+                  <span class="proof-team-name">{item.name}</span>
+                  {item.role && <span class="proof-team-years">{item.role}</span>}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</section>

@@ -12,8 +12,8 @@ import { gsap, mm, MOTION_OK, MOTION_REDUCED, DURATION, EASE } from './core';
  * Tailwind opacity classes because GSAP animates *to* them — a class would be
  * overwritten by the inline style the tween writes.
  */
-const GLOW_OPACITY = 0.07;
-const FRAME_OPACITY = 0.3;
+const GLOW_OPACITY = 0;
+const FRAME_OPACITY = 1;
 
 export function initHero(): void {
   const items = gsap.utils.toArray<HTMLElement>('[data-hero]');

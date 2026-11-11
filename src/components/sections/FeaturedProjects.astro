@@ -1,5 +1,5 @@
 ---
-/** Homepage highlight grid linking through to the full projects index. */
+/** Homepage highlight grid: one strong project per capability, each with a case study. */
 import { featuredProjects, projects } from '../../data/projects';
 import Section from '../ui/Section.astro';
 import ProjectCard from '../ui/ProjectCard.astro';
@@ -8,15 +8,15 @@ import Icon from '../icons/Icon.astro';
 ---
 
 <Section
-  id="projects-preview"
-  eyebrow="05 — Work"
+  id="work"
+  eyebrow="01 — Work"
   title="Selected projects"
-  subtitle="A selection of website development, SEO, automation, lead-generation, CRM, and digital marketing projects across B2B companies, local service businesses, ecommerce, and professional services."
+  subtitle="Client websites, SEO, CRM automation, and funnels. Each case study states what I personally built or run."
 >
   <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {
       featuredProjects.map((project, index) => (
-        <div data-reveal data-reveal-scale style={`--reveal-delay: ${(index % 3) * 90}ms`}>
+        <div class="flex" data-reveal data-reveal-scale style={`--reveal-delay: ${(index % 3) * 90}ms`}>
           <ProjectCard project={project} />
         </div>
       ))

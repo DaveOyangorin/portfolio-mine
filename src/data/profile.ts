@@ -5,22 +5,47 @@ import type { Stat } from './types';
 
 export const profile = {
   name: 'Dave Oyangorin',
-  /** Roles as listed in the live hero subheading. */
-  title: 'Digital Marketing Specialist, WordPress Developer & SEO Specialist',
-  shortTitle: 'WordPress Developer & SEO Specialist',
+  /** Positioning used in metadata, JSON-LD jobTitle, and the hero. */
+  title: 'Web Developer, SEO Specialist & Automation Specialist',
+  shortTitle: 'Web Developer & SEO Specialist',
+  /** The hero headline, one role per line. */
+  heroRoles: ['Web Developer', 'SEO Specialist', 'Automation Specialist'],
   location: 'Negros Oriental, Philippines',
 
-  heroHeading: 'Hello, my name is Dave Oyangorin',
-  heroSubheading:
-    "I started my career in web development, building responsive websites and working extensively with WordPress. Over the years, I expanded beyond development into SEO, digital marketing, CRM automation, paid advertising, content, and lead-generation systems. Today, I combine technical development with digital marketing to help businesses build websites that attract traffic, generate leads, and support measurable growth.",
+  heroHeadline:
+    'Websites that look sharp, load fast, and earn their place in search results.',
   heroStatement:
-    'I started my career in web development, building responsive websites and working extensively with WordPress. Over the years, I expanded beyond development into SEO, digital marketing, CRM automation, paid advertising, content, and lead-generation systems. Today, I combine technical development with digital marketing to help businesses build websites that attract traffic, generate leads, and support measurable growth.',
+    'I build high-performing websites, optimize search visibility, and develop automation solutions that help businesses work smarter. My expertise combines front-end development, WordPress, technical SEO, CRM integrations, and workflow automation.',
 
   about: [
-    'My career started in web development, where I spent years building responsive websites, working with WordPress, and developing front-end interfaces using HTML, CSS, JavaScript, Vue.js, and Bootstrap.',
-    'As I worked more closely with businesses and their websites, my role naturally expanded beyond development. Building the website was only one part of the challenge. Businesses also needed traffic, leads, automation, tracking, and a strategy for turning visitors into customers. That led me deeper into digital marketing.',
-    'Today, my work combines WordPress development, technical SEO, digital marketing, marketing automation, CRM systems, paid advertising, analytics, funnels, and content distribution. I have worked with WordPress platforms including Elementor, Divi, Beaver Builder, and WP Bakery, along with GoHighLevel, Duda, Thinkific, Shopify, and modern front-end technologies. On the marketing side, I work with technical and on-page SEO, Google Ads, GA4, Google Tag Manager, lead-generation funnels, email automation, social media content, CRM workflows, and AI-assisted marketing systems. My goal is no longer simply to launch a website. It is to build and improve the digital systems around it so the website can contribute to business growth.',
+    "I'm a Web Developer, SEO Specialist, and Automation Specialist with experience building and optimizing business websites, marketing systems, and custom digital solutions.",
+    'I started in front-end and WordPress development, working with HTML, CSS, JavaScript, Vue.js, and Bootstrap, and with builders such as Elementor, Divi, Beaver Builder, and WPBakery. As I worked closer to the businesses behind those sites, the job grew to include SEO, analytics, Google Ads, and CRM platforms such as GoHighLevel.',
+    'My approach combines clean development, user-focused design, search engine optimization, and practical automation to deliver websites and systems that support real business goals.',
   ],
+
+  /** How the work gets done. Each point is backed by the experience timeline. */
+  approach: [
+    {
+      title: 'Start from the requirement',
+      body: 'I work directly with clients and teams to pin down what the site, funnel, or automation has to do before I build it.',
+    },
+    {
+      title: 'Build for every screen',
+      body: 'Responsive layouts, tested across desktop, tablet, and mobile, with bugs fixed before launch.',
+    },
+    {
+      title: 'Ship it measurable',
+      body: 'Technical SEO, structured data, GA4, and Google Tag Manager go in with the build, not after it.',
+    },
+    {
+      title: 'Automate the follow-up',
+      body: 'Forms connect to CRM pipelines and workflows, so leads are routed and followed up without manual work.',
+    },
+  ],
+
+  /** The opportunities Dave is looking for. */
+  openTo:
+    'Remote full-time or contract roles in web development, SEO, and marketing automation, plus website and automation projects for agencies and businesses.',
 
   avatar,
   avatarAlt: 'Portrait of Dave Oyangorin',

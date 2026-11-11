@@ -1,65 +1,230 @@
 @import 'tailwindcss';
 
-/* ---------------------------------------------------------------------------
-   Design tokens
-   Emerald accent on a near-black surface — carried over from the original site
-   (emerald-600 buttons, emerald glow shadow), refined for AA contrast in both
-   colour schemes. Fonts match the original: Inter for text, IBM Plex Mono for
-   accents and numerals.
---------------------------------------------------------------------------- */
+/* ===========================================================================
+   ROUTE BOARD
+   A visual world taken from hand-painted Philippine jeepney route boards:
+   black enamel fields, sign-board white plates, chrome trim, enamel
+   yellow as the working accent, signal red reserved for the item under the
+   pointer or keyboard focus. Signwritten Bungee caps carry the display voice;
+   Archivo carries reading text and, narrowed, the route-plate labels.
+
+   Originally a pure reskin over frozen markup, so many rules below reach
+   components through region selectors. The Nov 2026 redesign added new
+   components (proof strip, case studies, skill groups, screen frames); those
+   use their own class hooks, collected at the end of this file.
+=========================================================================== */
+
 @theme {
-  /* Same two families as the original Next.js site, which loaded them through
-     next/font/google: Inter (variable, wght axis) for text and IBM Plex Mono
-     400/500 for accents. 'Inter Variable' is the family name @fontsource-variable
-     registers — without it the browser silently falls through to the system UI
-     font. Fallbacks are kept to bare sans-serif/monospace to match the original
-     stacks (`var(--font-inter), sans-serif`). */
-  --font-sans: 'Inter Variable', 'Inter', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  /* `font-mono` in the markup now means "route-plate label": narrowed Archivo
+     caps, not a code face. */
+  --font-mono: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-sign: 'Bungee', 'Archivo Variable', sans-serif;
 
-  --color-accent-50: #ecfdf5;
-  --color-accent-100: #d1fae5;
-  --color-accent-200: #a7f3d0;
-  --color-accent-300: #6ee7b7;
-  --color-accent-400: #34d399;
-  --color-accent-500: #10b981;
-  --color-accent-600: #059669;
-  --color-accent-700: #047857;
-  --color-accent-800: #065f46;
-  --color-accent-900: #064e3b;
+  /* The old emerald scale, remapped to enamel yellow so any decorative use of
+     it lands inside the world. */
+  --color-accent-50: #fff8df;
+  --color-accent-100: #ffeeb0;
+  --color-accent-200: #ffe17a;
+  --color-accent-300: #ffd23f;
+  --color-accent-400: #f5b700;
+  --color-accent-500: #e0a600;
+  --color-accent-600: #c18e00;
+  --color-accent-700: #9a7100;
+  --color-accent-800: #735400;
+  --color-accent-900: #4d3800;
 
-  --shadow-glow: 0 0 68px 7px rgb(5 150 105 / 0.4);
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -8px rgb(0 0 0 / 0.12);
-  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.06), 0 16px 40px -12px rgb(0 0 0 / 0.2);
+  /* Square-cut plates, not soft cards. */
+  --radius-lg: 3px;
+  --radius-xl: 3px;
+  --radius-2xl: 4px;
+  --radius-3xl: 6px;
 
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Offset, soft-blurred depth: a plate bolted slightly proud of the panel. */
+  --shadow-card: 0 1px 0 rgb(10 10 12 / 0.08), 0 6px 14px -8px rgb(10 10 12 / 0.35);
+  --shadow-card-hover: 0 2px 0 rgb(10 10 12 / 0.1), 0 14px 28px -14px rgb(10 10 12 / 0.5);
+  --shadow-glow: none;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Semantic surface tokens, remapped per colour scheme. */
+/* ---------------------------------------------------------------------------
+   Raw world colours. Never consumed directly by markup.
+--------------------------------------------------------------------------- */
 :root {
-  --surface: #ffffff;
-  --surface-raised: #f8fafc;
-  --surface-sunken: #f1f5f9;
-  --border-subtle: #e2e8f0;
-  --text-strong: #0f172a;
-  --text-body: #334155;
-  --text-muted: #64748b;
-  --accent: var(--color-accent-700);
-  --accent-contrast: #ffffff;
+  --rb-ultra: #141518;
+  --rb-ultra-deep: #202226;
+  --rb-night: #0b0c0e;
+  --rb-night-raised: #18191c;
+  --rb-ink: #111214;
+  --rb-yellow: #f5b700;
+  --rb-red: #d42a1f;
+  --rb-red-lit: #ff5a4a;
+  --rb-white: #ffffff;
+  --rb-galvanized: #eceef1;
+  --rb-chrome-hi: #f2f4f7;
+  --rb-chrome: #c3c8cf;
+  --rb-chrome-lo: #7d8693;
+
+  /* Polished chrome trim, used on frames and rules. */
+  --rb-chrome-trim: linear-gradient(
+    180deg,
+    var(--rb-chrome-hi) 0%,
+    var(--rb-chrome) 42%,
+    var(--rb-chrome-lo) 52%,
+    var(--rb-chrome) 70%,
+    var(--rb-chrome-hi) 100%
+  );
+  /* Signwriter drop shade depth; animated once on the name. */
+  --rb-shade: 0.075em;
+}
+
+/* ---------------------------------------------------------------------------
+   Semantic tokens. Light: white plates bolted to galvanized sheet.
+--------------------------------------------------------------------------- */
+:root {
+  --surface: var(--rb-galvanized);
+  --surface-raised: var(--rb-white);
+  --surface-sunken: var(--rb-ultra);
+  --border-subtle: #b3bac5;
+  --text-strong: var(--rb-ink);
+  --text-body: #2a2c31;
+  --text-muted: #4a4c52;
+  --accent: var(--rb-ultra);
+  --accent-contrast: var(--rb-white);
+  --hot: var(--rb-red);
+  --shade-color: var(--rb-yellow);
   color-scheme: light;
 }
 
+/* Dark: the same boards after sundown, on a near-black ground. */
 :root[data-theme='dark'] {
-  --surface: #08090c;
-  --surface-raised: #101319;
-  --surface-sunken: #0c0e13;
-  --border-subtle: #232833;
-  --text-strong: #f8fafc;
-  --text-body: #cbd5e1;
-  --text-muted: #94a3b8;
-  --accent: var(--color-accent-400);
-  --accent-contrast: #04110c;
+  --surface: var(--rb-night);
+  --surface-raised: var(--rb-night-raised);
+  --surface-sunken: #1c1d21;
+  --border-subtle: #36383e;
+  --text-strong: var(--rb-white);
+  --text-body: #dcdcd8;
+  --text-muted: #a9a9a4;
+  --accent: var(--rb-yellow);
+  --accent-contrast: var(--rb-ink);
+  --hot: var(--rb-red-lit);
+  --shade-color: #5b5f66;
   color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------------------
+   Region scopes. Tokens cascade, so a region re-declares them and every
+   component inside re-colours itself without touching markup.
+--------------------------------------------------------------------------- */
+
+/* Black enamel field: hero, sunken sections, footer, the homepage
+   header before scroll. */
+#home,
+section.bg-\[var\(--surface-sunken\)\],
+body > footer,
+body:has(#home) [data-nav-shell]:not(.glass) {
+  --surface-raised: var(--rb-ultra-deep);
+  --border-subtle: rgb(255 255 255 / 0.3);
+  --text-strong: var(--rb-white);
+  --text-body: #ececea;
+  --text-muted: #c4c4bf;
+  --accent: var(--rb-yellow);
+  --accent-contrast: var(--rb-ink);
+  --hot: var(--rb-red-lit);
+  --shade-color: #5b5f66;
+}
+
+:root[data-theme='dark'] #home,
+:root[data-theme='dark'] section.bg-\[var\(--surface-sunken\)\],
+:root[data-theme='dark'] body > footer {
+  --surface-sunken: #1c1d21;
+}
+
+/* White plates bolted onto a field: skill meters and role entries. */
+section.bg-\[var\(--surface-sunken\)\] .skill-group,
+#experience article {
+  --surface: var(--rb-white);
+  --surface-raised: var(--rb-white);
+  --surface-sunken: var(--rb-galvanized);
+  --border-subtle: #b3bac5;
+  --text-strong: var(--rb-ink);
+  --text-body: #2a2c31;
+  --text-muted: #4a4c52;
+  --accent: var(--rb-ultra);
+  --accent-contrast: var(--rb-white);
+  --hot: var(--rb-red);
+}
+
+:root[data-theme='dark'] section.bg-\[var\(--surface-sunken\)\] .skill-group,
+:root[data-theme='dark'] #experience article {
+  --surface: var(--rb-night);
+  --surface-raised: var(--rb-night);
+  --surface-sunken: var(--rb-night-raised);
+  --border-subtle: #36383e;
+  --text-strong: var(--rb-white);
+  --text-body: #dcdcd8;
+  --text-muted: #a9a9a4;
+  --accent: var(--rb-yellow);
+  --accent-contrast: var(--rb-ink);
+  --hot: var(--rb-red-lit);
+}
+
+/* Enamel-yellow board: the closing contact sign, in both themes. */
+#contact > .container-page > div {
+  --surface-raised: var(--rb-yellow);
+  --surface: var(--rb-yellow);
+  --border-subtle: rgb(10 10 12 / 0.4);
+  --text-strong: var(--rb-ink);
+  --text-body: #1c1d20;
+  --text-muted: #2a2b2e;
+  --accent: var(--rb-ink);
+  --accent-contrast: var(--rb-yellow);
+  --hot: #9e0015;
+  --shade-color: var(--rb-white);
+}
+
+/* State by inversion: an interactive plate swaps enamel and ink. */
+article.group:hover,
+article.group:focus-within {
+  --surface-raised: var(--rb-ultra);
+  --surface: var(--rb-ultra-deep);
+  --border-subtle: rgb(255 255 255 / 0.32);
+  --text-strong: var(--rb-white);
+  --text-body: #ececea;
+  --text-muted: #c4c4bf;
+  --accent: var(--rb-yellow);
+  --accent-contrast: var(--rb-ink);
+  --hot: var(--rb-yellow);
+}
+
+:root[data-theme='dark'] article.group:hover,
+:root[data-theme='dark'] article.group:focus-within {
+  --surface-raised: var(--rb-yellow);
+  --surface: #ffd23f;
+  --border-subtle: rgb(10 10 12 / 0.4);
+  --text-strong: var(--rb-ink);
+  --text-body: #1c1d20;
+  --text-muted: #2a2b2e;
+  --accent: var(--rb-ink);
+  --accent-contrast: var(--rb-yellow);
+  --hot: var(--rb-ink);
+}
+
+/* One-shot shade pass on the signwritten name. */
+@property --rb-shade-live {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0em;
+}
+
+@keyframes rb-shade-pass {
+  from {
+    --rb-shade-live: 0em;
+  }
+  to {
+    --rb-shade-live: var(--rb-shade);
+  }
 }
 
 @layer base {
@@ -68,15 +233,25 @@
     /* Offset anchor targets so the sticky header never covers a heading. */
     scroll-padding-top: 6rem;
     -webkit-text-size-adjust: 100%;
+    accent-color: var(--accent);
+    scrollbar-color: var(--rb-ultra) var(--rb-galvanized);
+  }
+
+  :root[data-theme='dark'] {
+    scrollbar-color: var(--rb-yellow) var(--rb-night);
   }
 
   body {
     background-color: var(--surface);
     color: var(--text-body);
     font-family: var(--font-sans);
-    /* The original site applied no font-smoothing or text-rendering overrides,
-       so Inter renders at the browser default weight here too. Forcing
-       antialiased/optimizeLegibility made the same text look noticeably lighter. */
+    font-variation-settings: normal;
+    caret-color: var(--hot);
+  }
+
+  ::selection {
+    background-color: var(--rb-yellow);
+    color: var(--rb-ink);
   }
 
   h1,
@@ -85,18 +260,17 @@
   h4 {
     color: var(--text-strong);
     text-wrap: balance;
-    /* No letter-spacing override: the original never tightened its headings. */
   }
 
   p {
     text-wrap: pretty;
   }
 
-  /* Visible, consistent focus ring for keyboard users on every interactive element. */
+  /* Focus is one of the two states that earn signal red. */
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--hot);
     outline-offset: 3px;
-    border-radius: 0.25rem;
+    border-radius: 2px;
   }
 
   /* Respect users who have asked for reduced motion. */
@@ -137,11 +311,13 @@
     }
   }
 
-  /* Frosted panel used for cards and the sticky header. */
+  /* The scrolled header and mobile menu: a solid sign plate with chrome trim.
+     No blur: a route board is enamel, not glass. */
   .glass {
-    background-color: color-mix(in srgb, var(--surface-raised) 82%, transparent);
-    backdrop-filter: blur(12px);
+    background-color: var(--surface-raised);
     border: 1px solid var(--border-subtle);
+    box-shadow:
+      0 10px 24px -16px rgb(10 10 12 / 0.6);
   }
 
   /* Theme toggle: show only the icon for the theme you can switch *to*.
@@ -158,13 +334,14 @@
 
   .link-underline {
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
-    text-underline-offset: 3px;
-    transition: text-decoration-color 200ms var(--ease-out-soft);
+    text-decoration-thickness: 1.5px;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 160ms var(--ease-out-soft);
   }
 
   .link-underline:hover {
-    text-decoration-color: var(--accent);
+    text-decoration-color: var(--hot);
   }
 }
 
@@ -205,24 +382,12 @@
     /* Resting opacities for the decorative layers; keep in sync with
        GLOW_OPACITY / FRAME_OPACITY in scripts/motion/hero.ts. */
     [data-hero-glow] {
-      opacity: 0.07;
+      opacity: 0;
     }
 
     [data-hero-frame] {
-      opacity: 0.3;
+      opacity: 1;
     }
-  }
-
-  /* Skill accordion panels start collapsed. GSAP tweens `height` from here, so
-     the overflow clip has to be declared up front — without it the list spills
-     out of the zero-height box on the very first frame of the expand.
-
-     Reduced motion keeps the collapsed start state (the accordion still works,
-     it just snaps); only .no-js opens everything, in Layout.astro. */
-  [data-skill-panel] {
-    height: 0;
-    overflow: hidden;
-    opacity: 0;
   }
 
   /* Counters tween through varying digit widths; fixing the glyph advance stops
@@ -231,15 +396,1057 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Formerly a gradient; now the name's enamel yellow fill. The class moves
+     onto each letter span during the hero intro (heroTitle.ts). */
   .text-gradient {
-    background-image: linear-gradient(
-      110deg,
-      var(--color-accent-400),
-      var(--color-accent-600) 55%,
-      var(--color-accent-300)
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--accent);
   }
+}
+
+/* ===========================================================================
+   World layer. Unlayered, so it outranks Tailwind's utilities where the frozen
+   markup asks for the old look (lifts, glows, pills, glass).
+=========================================================================== */
+
+/* ----- Type: route-plate labels (markup's font-mono) ----- */
+.font-mono {
+  font-family: var(--font-mono);
+  font-stretch: 78%;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  font-family: var(--font-sign);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.08;
+}
+
+/* Sentence-length section titles stay legible as sign caps. */
+section[aria-labelledby] h2[id$='-heading'],
+#contact h2 {
+  font-size: clamp(1.6rem, 1.1rem + 1.9vw, 2.6rem);
+  max-width: 24ch;
+}
+
+h3 {
+  font-stretch: 112%;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+/* Footer column labels are h2s but read as small plates. */
+body > footer h2 {
+  font-family: var(--font-mono);
+  font-stretch: 78%;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ----- The signwritten name ----- */
+#home {
+  background-color: var(--surface-sunken);
+}
+
+#home h1 {
+  font-size: clamp(2.25rem, 1.2rem + 3.6vw, 4.6rem);
+  line-height: 1.02;
+  color: var(--text-strong);
+  text-shadow: var(--rb-shade-live) var(--rb-shade-live) 0 var(--shade-color);
+  animation: rb-shade-pass 520ms var(--ease-out-soft) 900ms both;
+}
+
+#home h1.hero-roles {
+  font-size: clamp(1.85rem, 1rem + 2.5vw, 3.05rem);
+  line-height: 1.04;
+}
+
+#home .hero-role {
+  display: block;
+}
+
+#home .hero-role ~ .hero-role {
+  margin-top: 0.08em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home h1 {
+    animation: none;
+    --rb-shade-live: var(--rb-shade);
+  }
+}
+
+/* Small screens drop shade depth a step; the name never shrinks below sign
+   scale. */
+@media (max-width: 639px) {
+  #home h1 {
+    --rb-shade: 0.06em;
+  }
+}
+
+/* Route-board trim along the bottom of the hero field: yellow band, chrome
+   rule. */
+#home::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 10px;
+  background:
+    linear-gradient(var(--rb-yellow), var(--rb-yellow)) top / 100% 6px no-repeat,
+    var(--rb-chrome-trim) bottom / 100% 4px no-repeat;
+}
+
+/* The header spacer joins the hero field on the homepage. */
+body:has(#home) > div.h-20[aria-hidden='true'] {
+  background-color: var(--rb-ultra);
+}
+
+:root[data-theme='dark'] body:has(#home) > div.h-20[aria-hidden='true'] {
+  background-color: #1c1d21;
+}
+
+/* Ambient glows are not part of an enamel world. */
+[data-hero-glow],
+#contact [aria-hidden='true'].blur-\[100px\] {
+  display: none;
+}
+
+/* Availability pill becomes a white route plate. */
+#home p[data-hero].rounded-full {
+  border-radius: 2px;
+  border: 0;
+  background-color: var(--rb-white);
+  color: var(--rb-ink);
+  font-size: 0.78rem;
+  padding: 0.45rem 0.8rem 0.4rem;
+  box-shadow: inset 0 -3px 0 var(--rb-yellow);
+}
+
+#home p[data-hero].rounded-full .rounded-full {
+  background-color: var(--rb-ultra);
+}
+
+/* Portrait in a chrome-trimmed frame, bolted to a yellow enamel plate. */
+#home [data-hero-image] > div.rounded-3xl {
+  border-radius: 4px;
+  border: 0;
+  box-shadow:
+    0 0 0 3px var(--rb-chrome-hi),
+    0 0 0 5px var(--rb-chrome-lo),
+    0 0 0 7px var(--rb-chrome),
+    0 24px 40px -18px rgb(0 0 0 / 0.7);
+}
+
+#home [data-hero-frame] {
+  border-radius: 4px;
+  border: 0;
+  background-color: var(--rb-yellow);
+}
+
+html.no-js [data-hero-frame] {
+  opacity: 1;
+}
+
+html.no-js [data-hero-glow] {
+  display: none;
+}
+
+/* ----- Section headings: route numbers and pinstripes ----- */
+section[aria-labelledby] header[data-reveal] > p.font-mono,
+#contact p.font-mono.uppercase,
+main > div.container-page > header > p.font-mono {
+  display: inline-block;
+  padding: 0.35rem 0.6rem 0.3rem;
+  border-radius: 2px;
+  background-color: var(--accent);
+  color: var(--accent-contrast);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+}
+
+section[aria-labelledby] header[data-reveal]::after,
+main > div.container-page > header::after {
+  content: '';
+  display: block;
+  width: 5.5rem;
+  height: 5px;
+  margin-top: 1.4rem;
+  background: linear-gradient(
+    var(--accent) 0 1.5px,
+    transparent 1.5px 3.5px,
+    var(--accent) 3.5px 5px
+  );
+}
+
+#contact h2 .text-gradient {
+  color: var(--text-strong);
+  text-shadow: 0.06em 0.06em 0 var(--shade-color);
+}
+
+/* ----- Buttons: enamel plates that invert on hover ----- */
+a.inline-flex.rounded-xl.font-medium {
+  border-radius: 3px;
+  border: 2px solid transparent;
+  font-stretch: 92%;
+  font-weight: 750;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  font-size: 0.86rem;
+  translate: none !important;
+  box-shadow: none !important;
+  transition:
+    background-color 140ms var(--ease-out-soft),
+    color 140ms var(--ease-out-soft),
+    border-color 140ms var(--ease-out-soft);
+}
+
+a.inline-flex.rounded-xl.font-medium.text-base {
+  font-size: 0.92rem;
+}
+
+/* Primary */
+a.rounded-xl.bg-\[var\(--accent\)\] {
+  border-color: var(--accent);
+}
+
+a.rounded-xl.bg-\[var\(--accent\)\]:hover,
+a.rounded-xl.bg-\[var\(--accent\)\]:focus-visible {
+  background-color: var(--accent-contrast);
+  color: var(--accent);
+}
+
+/* Secondary */
+a.rounded-xl.border.bg-\[var\(--surface-raised\)\] {
+  background-color: transparent;
+  border-color: var(--text-strong);
+  color: var(--text-strong);
+}
+
+a.rounded-xl.border.bg-\[var\(--surface-raised\)\]:hover,
+a.rounded-xl.border.bg-\[var\(--surface-raised\)\]:focus-visible {
+  background-color: var(--text-strong);
+  border-color: var(--text-strong);
+  color: var(--surface-raised);
+}
+
+/* Ghost */
+a.rounded-xl.hover\:bg-\[var\(--surface-raised\)\]:hover {
+  background-color: transparent;
+  color: var(--hot);
+  border-color: var(--hot);
+}
+
+/* ----- Plates, pills, and the end of lifts ----- */
+li.rounded-full,
+button.rounded-full[data-filter] {
+  border-radius: 2px;
+}
+
+li.rounded-full.font-mono,
+button.rounded-full[data-filter] {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+/* Filter plates: pressed reads as a lit plate, hover takes the reserved red. */
+button[data-filter] {
+  border-width: 1.5px;
+  border-color: var(--text-strong);
+  color: var(--text-strong);
+}
+
+button[data-filter]:hover {
+  border-color: var(--hot);
+  color: var(--hot);
+}
+
+button[data-filter][aria-pressed='true'] {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* Non-interactive panels do not pretend to be buttons. */
+#about dl > div:hover,
+#services li.group:hover,
+#experience article:hover {
+  translate: none;
+  border-color: var(--border-subtle);
+  box-shadow: none;
+}
+
+/* Interactive plates stay put; colour does the work. */
+article.group:hover,
+a.group:hover,
+[aria-label$='(opens in a new tab)'].rounded-xl:hover,
+button[data-back-to-top]:hover {
+  translate: none;
+}
+
+/* ----- Project cards ----- */
+article.group {
+  border-width: 1px;
+  border-color: var(--border-subtle);
+  transition:
+    background-color 160ms var(--ease-out-soft),
+    border-color 160ms var(--ease-out-soft);
+}
+
+article.group:hover,
+article.group:focus-within {
+  border-color: var(--surface-raised);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Logo plates keep their fixed tones; a chrome rule seats them on the card. */
+article.group > div:first-child {
+  border-bottom: 3px solid transparent;
+  border-image: var(--rb-chrome-trim) 1;
+}
+
+article.group h3 a {
+  transition: color 160ms var(--ease-out-soft);
+}
+
+article.group:hover h3 a {
+  color: var(--text-strong);
+}
+
+/* ----- Designed absence: the blank route plate ----- */
+div[role='img'][aria-label$='no preview image available'] {
+  background-color: var(--rb-ultra);
+  background-image: none;
+  border-radius: 2px;
+  box-shadow:
+    inset 0 0 0 8px var(--rb-ultra),
+    inset 0 0 0 9.5px var(--rb-yellow),
+    inset 0 0 0 12px var(--rb-ultra),
+    inset 0 0 0 13px var(--rb-yellow);
+}
+
+/* The blank plate fills its frame edge to edge; no plate inside a plate. */
+div:has(> div[role='img'][aria-label$='no preview image available']) {
+  padding: 0;
+  background-color: var(--rb-ultra);
+}
+
+div[role='img'][aria-label$='no preview image available'] > span {
+  font-family: var(--font-sign);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 1.6rem + 2vw, 3.4rem);
+  letter-spacing: 0.04em;
+  color: var(--rb-yellow);
+  opacity: 1;
+  text-shadow: 0.07em 0.07em 0 #5b5f66;
+}
+
+/* ----- About: stat plates ----- */
+#about dl > div {
+  border-radius: 3px;
+}
+
+#about dd > span.font-mono {
+  font-family: var(--font-sign);
+  font-stretch: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-shadow: 0.07em 0.07em 0 var(--shade-color);
+}
+
+/* ----- Services ----- */
+#services li.group {
+}
+
+#services li.group span.rounded-xl {
+  border-radius: 2px;
+  background-color: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+#services li.group:hover span.rounded-xl {
+  scale: 1;
+}
+
+/* ----- Skills: one white plate per category ----- */
+.skill-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .skill-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .skill-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.skill-group {
+  padding: 1.5rem;
+  border-radius: 3px;
+  background-color: var(--surface);
+  box-shadow:
+    inset 0 4px 0 var(--rb-yellow),
+    var(--shadow-card);
+}
+
+.skill-group h3 {
+  font-size: 1.05rem;
+}
+
+/* ----- Experience: pinstripe rail and chrome rivets ----- */
+#experience ol > span[aria-hidden='true']:first-child {
+  width: 5px;
+  left: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--rb-yellow) 0 1.5px,
+    transparent 1.5px 3.5px,
+    var(--rb-yellow) 3.5px 5px
+  );
+}
+
+#experience li > span[aria-hidden='true'].rounded-full {
+  border: 0;
+  background: radial-gradient(
+    circle at 35% 30%,
+    var(--rb-chrome-hi) 0 18%,
+    var(--rb-chrome) 40%,
+    var(--rb-chrome-lo) 100%
+  );
+  box-shadow:
+    0 0 0 2px var(--rb-ultra),
+    0 0 0 3.5px var(--rb-yellow);
+}
+
+#experience article {
+  border-width: 0;
+  border-left: 0;
+  box-shadow: var(--shadow-card);
+}
+
+#experience article ul li > span[aria-hidden='true'] {
+  width: 5px;
+  height: 5px;
+  border-radius: 0;
+  rotate: 45deg;
+  margin-top: 0.6rem;
+}
+
+/* ----- Contact: the closing yellow board ----- */
+#contact > .container-page > div {
+  border-radius: 4px;
+  border: 0;
+  box-shadow:
+    inset 0 0 0 10px var(--rb-yellow),
+    inset 0 0 0 12px var(--rb-ink),
+    inset 0 0 0 16px var(--rb-yellow),
+    inset 0 0 0 17px var(--rb-ink);
+}
+
+#contact iframe {
+  background-color: var(--rb-white);
+}
+
+#contact div.rounded-2xl.border {
+  border: 2px solid var(--rb-ink);
+  border-radius: 3px;
+}
+
+/* ----- Social plates ----- */
+a[aria-label$='(opens in a new tab)'].rounded-xl {
+  border-radius: 3px;
+  border-color: var(--border-subtle);
+  background-color: transparent;
+  color: var(--text-strong);
+  transition:
+    background-color 140ms var(--ease-out-soft),
+    color 140ms var(--ease-out-soft),
+    border-color 140ms var(--ease-out-soft);
+}
+
+a[aria-label$='(opens in a new tab)'].rounded-xl:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* ----- Header ----- */
+[data-nav-shell] {
+  border-radius: 4px;
+}
+
+#site-header a[href='/'].font-mono {
+  font-family: var(--font-sign);
+  font-stretch: normal;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 1.05rem;
+}
+
+[data-spy-link] {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  border-radius: 2px;
+}
+
+[data-spy-link]:hover {
+  color: var(--hot);
+}
+
+[data-spy-link].text-\[var\(--accent\)\],
+[data-spy-link][aria-current='page'] {
+  background-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+[data-mobile-link] {
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+}
+
+[data-theme-toggle]:hover,
+[data-menu-toggle]:hover {
+  color: var(--hot);
+}
+
+/* ----- Footer ----- */
+body > footer {
+  border-top: 0;
+  box-shadow:
+    inset 0 6px 0 var(--rb-yellow),
+    inset 0 10px 0 var(--rb-chrome);
+}
+
+body > footer a:hover {
+  color: var(--hot);
+}
+
+body > footer p.font-mono {
+  font-family: var(--font-sign);
+  font-stretch: normal;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* ----- Project detail ----- */
+article.container-page div.aspect-\[16\/9\] {
+  border-radius: 4px;
+  border: 0;
+  box-shadow:
+    0 0 0 3px var(--rb-chrome-hi),
+    0 0 0 5px var(--rb-chrome-lo),
+    0 0 0 6px var(--rb-chrome);
+}
+
+aside > div.rounded-2xl {
+}
+
+aside h2.font-mono {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+}
+
+nav[aria-label='More projects'] a.group {
+  border-radius: 3px;
+  background-color: var(--surface-raised);
+  transition:
+    background-color 140ms var(--ease-out-soft),
+    color 140ms var(--ease-out-soft),
+    border-color 140ms var(--ease-out-soft);
+}
+
+nav[aria-label='More projects'] a.group:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+nav[aria-label='More projects'] a.group:hover span {
+  color: var(--accent-contrast);
+}
+
+nav[aria-label='Breadcrumb'] a:hover {
+  color: var(--hot);
+}
+
+/* ----- 404: the route number ----- */
+main > div.container-page > p.font-mono.text-6xl {
+  font-family: var(--font-sign);
+  font-stretch: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  font-size: clamp(4.5rem, 3rem + 6vw, 7.5rem);
+  text-shadow: 0.07em 0.07em 0 var(--shade-color);
+}
+
+/* ----- Chrome: scroll progress, back to top ----- */
+div:has(> [data-scroll-progress]) {
+  height: 4px;
+}
+
+[data-scroll-progress] {
+  background-color: var(--rb-yellow);
+  box-shadow: 0 1px 0 var(--rb-ink);
+}
+
+button[data-back-to-top] {
+  border-radius: 3px;
+  background-color: var(--rb-ultra);
+  color: var(--rb-yellow);
+  border: 0;
+  box-shadow:
+    inset 0 -3px 0 var(--rb-yellow),
+    0 10px 20px -10px rgb(0 0 0 / 0.6);
+}
+
+button[data-back-to-top]:hover {
+  background-color: var(--rb-yellow);
+  color: var(--rb-ink);
+}
+
+/* Skip link plate. */
+a[href='#main']:focus {
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ===========================================================================
+   Redesign components (Nov 2026). Own class hooks, same world tokens.
+=========================================================================== */
+
+/* ----- Hero: name kicker and supporting headline ----- */
+.hero-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-stretch: 92%;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+
+@media (max-width: 639px) {
+  .hero-kicker {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .hero-kicker > [aria-hidden='true'] {
+    display: none;
+  }
+}
+
+.hero-headline {
+  margin-top: 1.6rem;
+  max-width: 34rem;
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-strong);
+}
+
+/* ----- Proof strip: teams and clients, directly under the hero ----- */
+.proof {
+  padding-block: 2.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.proof-grid {
+  display: grid;
+  gap: 2.25rem;
+}
+
+@media (min-width: 1024px) {
+  .proof-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: 4rem;
+  }
+}
+
+.proof-label {
+  margin-bottom: 0.9rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.proof-teams {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+}
+
+.proof-teams li,
+.proof-quotes figcaption {
+  display: flex;
+  flex-direction: column;
+}
+
+.proof-team-name {
+  font-stretch: 108%;
+  font-weight: 750;
+  font-size: 1.05rem;
+  color: var(--text-strong);
+}
+
+.proof-team-years {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.proof-clients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.proof-clients a {
+  display: inline-block;
+  padding: 0.4rem 0.7rem;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 2px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-strong);
+  transition:
+    background-color 140ms var(--ease-out-soft),
+    border-color 140ms var(--ease-out-soft),
+    color 140ms var(--ease-out-soft);
+}
+
+.proof-clients a:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.proof-quotes {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .proof-quotes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.proof-quotes figure {
+  height: 100%;
+  padding: 1.5rem;
+  border-radius: 3px;
+  background-color: var(--surface-raised);
+  box-shadow:
+    inset 0 4px 0 var(--rb-yellow),
+    var(--shadow-card);
+}
+
+.proof-quotes blockquote {
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  color: var(--text-body);
+}
+
+/* ----- Project cards: category plate and full-bleed captures ----- */
+.flex > article.group {
+  width: 100%;
+}
+
+.card-category {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+article.group > .card-media.is-screen {
+  align-items: flex-start;
+}
+
+/* ----- About: approach steps and availability plate ----- */
+.about-subhead {
+  margin-top: 2.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.about-approach {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .about-approach {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.about-approach li {
+  display: flex;
+  gap: 0.9rem;
+}
+
+.about-step-number {
+  flex: none;
+  font-family: var(--font-sign);
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--accent);
+}
+
+.about-open {
+  margin-top: 1rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 3px;
+  background-color: var(--rb-yellow);
+  color: var(--rb-ink);
+}
+
+.about-open p:first-child {
+  margin-bottom: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+}
+
+/* ----- Case studies ----- */
+.cs-header {
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .cs-header {
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    gap: 4rem;
+    align-items: end;
+  }
+}
+
+.cs-overview {
+  display: grid;
+  gap: 1px;
+  overflow: hidden;
+  border-radius: 3px;
+  background-color: var(--border-subtle);
+  border: 1px solid var(--border-subtle);
+}
+
+.cs-overview > div {
+  padding: 0.85rem 1.1rem;
+  background-color: var(--surface-raised);
+}
+
+.cs-overview dt {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.cs-overview dd {
+  margin-top: 0.15rem;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.cs-body {
+  display: grid;
+  gap: 3rem;
+  align-content: start;
+}
+
+.cs-body p,
+.cs-list li {
+  font-size: 1.075rem;
+  color: var(--text-body);
+}
+
+h2.cs-heading {
+  margin-bottom: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--text-strong);
+}
+
+h2.cs-heading::before {
+  content: '';
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-right: 0.6rem;
+  background-color: var(--rb-yellow);
+  vertical-align: 0.05em;
+}
+
+.cs-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.cs-list li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.cs-list li::before {
+  content: '';
+  position: absolute;
+  left: 0.15rem;
+  top: 0.65em;
+  width: 6px;
+  height: 6px;
+  rotate: 45deg;
+  background-color: var(--accent);
+}
+
+.cs-process {
+  display: grid;
+  gap: 0.6rem;
+  counter-reset: cs-step;
+}
+
+.cs-process li {
+  counter-increment: cs-step;
+}
+
+.cs-process li::before {
+  content: counter(cs-step, decimal-leading-zero) '\00a0\00a0';
+  font-family: var(--font-sign);
+  color: var(--accent);
+}
+
+.cs-mobile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem;
+}
+
+.cs-mobile .screen-frame {
+  width: min(16rem, 100%);
+}
+
+.cs-mobile p {
+  flex: 1 1 12rem;
+  font-size: 0.875rem;
+}
+
+.cs-related {
+  display: grid;
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .cs-related {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.cs-related a {
+  display: block;
+  height: 100%;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  background-color: var(--surface-raised);
+  color: var(--text-strong);
+  transition:
+    background-color 140ms var(--ease-out-soft),
+    border-color 140ms var(--ease-out-soft),
+    color 140ms var(--ease-out-soft);
+}
+
+.cs-related a:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.cs-related a:hover span {
+  color: inherit;
+}
+
+/* ----- Screen frames: browser bar and handset ----- */
+.screen-frame {
+  overflow: hidden;
+  background-color: var(--rb-ultra);
+}
+
+.screen-frame.is-desktop {
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 3px var(--rb-chrome-hi),
+    0 0 0 5px var(--rb-chrome-lo),
+    0 0 0 6px var(--rb-chrome),
+    0 28px 48px -28px rgb(0 0 0 / 0.6);
+}
+
+.screen-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 2.1rem;
+  padding-inline: 0.85rem;
+  background-color: var(--rb-ultra);
+  border-bottom: 3px solid var(--rb-yellow);
+}
+
+.screen-dots {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.screen-dots i {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background-color: var(--rb-chrome-lo);
+}
+
+.screen-host {
+  flex: 1;
+  max-width: 22rem;
+  padding: 0.15rem 0.7rem;
+  border-radius: 2px;
+  background-color: var(--rb-ultra-deep);
+  font-size: 0.75rem;
+  color: var(--rb-chrome);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.screen-frame.is-mobile {
+  padding: 0.55rem;
+  border-radius: 1.75rem;
+  box-shadow:
+    0 0 0 2px var(--rb-chrome-lo),
+    0 24px 40px -24px rgb(0 0 0 / 0.6);
+}
+
+.screen-frame.is-mobile img {
+  border-radius: 1.3rem;
 }

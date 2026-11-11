@@ -1,46 +1,68 @@
 ---
-/** About copy alongside the animated statistics grid. */
+/** About: background, approach, what Dave is open to, and the stats grid. */
 import { profile, stats } from '../../data/profile';
 import Section from '../ui/Section.astro';
 ---
 
 <Section
   id="about"
-  eyebrow="01 — About"
-  title="From building websites to building digital growth systems."
-  subtitle="My career has evolved from front-end and WordPress development into a broader digital marketing role covering SEO, automation, paid media, CRM systems, analytics, lead generation, and content marketing."
+  eyebrow="04 — About"
+  title="A developer who also owns the marketing system."
 >
   <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-    <div class="space-y-5" data-reveal>
-      {
-        profile.about.map((paragraph) => (
-          <p class="text-lg text-[var(--text-body)]">{paragraph}</p>
-        ))
-      }
+    <div>
+      <div class="space-y-5" data-reveal>
+        {
+          profile.about.map((paragraph) => (
+            <p class="text-lg text-[var(--text-body)]">{paragraph}</p>
+          ))
+        }
+      </div>
+
+      <h3 class="about-subhead font-mono" data-reveal>How I work</h3>
+      <ol class="about-approach">
+        {
+          profile.approach.map((step, index) => (
+            <li data-reveal style={`--reveal-delay: ${index * 70}ms`}>
+              <span class="about-step-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <p class="font-semibold text-[var(--text-strong)]">{step.title}</p>
+                <p class="mt-1 text-[var(--text-muted)]">{step.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
     </div>
 
-    <dl class="grid grid-cols-2 gap-4 self-start">
-      {
-        stats.map((stat, index) => (
-          <div
-            class="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-5 transition-all duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-1 hover:border-[var(--accent)]"
-            data-reveal
-            style={`--reveal-delay: ${index * 80}ms`}
-          >
-            <dt class="sr-only">{stat.label}</dt>
-            <dd>
-              <span class="block font-mono text-3xl font-medium text-[var(--accent)] sm:text-4xl">
-                {/* Counter animates from 0; the value is present for no-JS and SEO. */}
-                <span data-counter={stat.value}>{stat.value}</span>
-                {stat.suffix}
-              </span>
-              <span class="mt-2 block text-sm text-[var(--text-muted)]">
-                {stat.label}
-              </span>
-            </dd>
-          </div>
-        ))
-      }
-    </dl>
+    <div class="self-start">
+      <dl class="grid grid-cols-2 gap-4">
+        {
+          stats.map((stat, index) => (
+            <div
+              class="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-5"
+              data-reveal
+              style={`--reveal-delay: ${index * 80}ms`}
+            >
+              <dt class="sr-only">{stat.label}</dt>
+              <dd>
+                <span class="block font-mono text-3xl font-medium text-[var(--accent)] sm:text-4xl">
+                  {/* Counter animates from 0; the value is present for no-JS and SEO. */}
+                  <span data-counter={stat.value}>{stat.value}</span>{stat.suffix}
+                </span>
+                <span class="mt-2 block text-sm text-[var(--text-muted)]">
+                  {stat.label}
+                </span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="about-open" data-reveal>
+        <p class="font-mono">Open to</p>
+        <p>{profile.openTo}</p>
+      </div>
+    </div>
   </div>
 </Section>

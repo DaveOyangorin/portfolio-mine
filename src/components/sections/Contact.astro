@@ -7,6 +7,7 @@ import SocialLinks from '../ui/SocialLinks.astro';
 import Icon from '../icons/Icon.astro';
 
 const linkedIn = socials.find((social) => social.label === 'LinkedIn');
+const github = socials.find((social) => social.label === 'GitHub');
 ---
 
 <section id="contact" class="scroll-mt-24 py-20 sm:py-28">
@@ -52,6 +53,25 @@ const linkedIn = socials.find((social) => social.label === 'LinkedIn');
                   Message me on LinkedIn
                 </Button>
               )
+            )
+          }
+
+          {
+            /* With an email set, LinkedIn drops to a secondary route. */
+            contact.email && linkedIn && (
+              <Button href={linkedIn.url} variant="secondary" size="lg" external>
+                <Icon name="linkedin" size={18} />
+                LinkedIn
+              </Button>
+            )
+          }
+
+          {
+            github && (
+              <Button href={github.url} variant="secondary" size="lg" external>
+                <Icon name="github" size={18} />
+                GitHub
+              </Button>
             )
           }
 

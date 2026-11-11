@@ -1,0 +1,50 @@
+---
+/**
+ * A screenshot in a minimal device frame: a browser bar for desktop, a rounded
+ * handset for mobile. Dimensions come from the image metadata, so the frame
+ * reserves its space before the image loads (no layout shift).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  device: 'desktop' | 'mobile';
+  /** Hostname shown in the browser bar. */
+  host?: string;
+  /** Eager + high priority for the above-the-fold capture only. */
+  priority?: boolean;
+  sizes: string;
+  class?: string;
+}
+
+const { src, alt, device, host, priority = false, sizes, class: className = '' } = Astro.props;
+const widths = device === 'desktop' ? [640, 960, 1280, 1440] : [240, 390, 780];
+---
+
+<figure class:list={['screen-frame', `is-${device}`, className]}>
+  {
+    device === 'desktop' && (
+      <div class="screen-bar" aria-hidden="true">
+        <span class="screen-dots">
+          <i />
+          <i />
+          <i />
+        </span>
+        {host && <span class="screen-host">{host}</span>}
+      </div>
+    )
+  }
+  <Image
+    src={src}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : undefined}
+    decoding="async"
+    class="block h-auto w-full"
+  />
+  <slot />
+</figure>

@@ -18,8 +18,9 @@ const pageUrl = new URL(`${Astro.url.pathname.replace(/\/$/, '')}/`, SITE_URL).h
 const personId = `${homeUrl}#person`;
 const websiteId = `${homeUrl}#website`;
 const portrait = await getImage({ src: profile.avatar, width: 480, format: 'webp' });
-const artwork = project?.image
-  ? await getImage({ src: project.image, width: Math.min(960, project.image.width), format: 'webp' })
+const artworkSource = project?.screens?.desktop ?? project?.image;
+const artwork = artworkSource
+  ? await getImage({ src: artworkSource, width: Math.min(960, artworkSource.width), format: 'webp' })
   : undefined;
 
 const person = {

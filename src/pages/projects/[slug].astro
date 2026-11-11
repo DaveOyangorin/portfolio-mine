@@ -1,10 +1,17 @@
 ---
-/** Static project detail page. Slugs mirror the previous site's URLs. */
-import { Image } from 'astro:assets';
+/**
+ * Project case study. Slugs mirror the previous site's URLs.
+ *
+ * Every section is conditional on documented data (see data/caseStudies.ts):
+ * a project without an objective simply has no Objective section. Nothing is
+ * padded with placeholder copy.
+ */
+import { Image, getImage } from 'astro:assets';
 import type { GetStaticPaths } from 'astro';
 import Layout from '../../layouts/Layout.astro';
 import Button from '../../components/ui/Button.astro';
 import ProjectPlaceholder from '../../components/ui/ProjectPlaceholder.astro';
+import ScreenFrame from '../../components/ui/ScreenFrame.astro';
 import Icon from '../../components/icons/Icon.astro';
 import { projects } from '../../data/projects';
 
@@ -15,6 +22,31 @@ export const getStaticPaths = (() =>
   }))) satisfies GetStaticPaths;
 
 const { project } = Astro.props;
+const study = project.caseStudy ?? {};
+const screens = project.screens;
+const liveLabel = project.liveLabel ?? 'Visit live website';
+/** Social preview: the live-site capture, cropped to 1200×630 from the top. */
+const ogImage = screens
+  ? (await getImage({ src: screens.desktop, width: 1200, height: 630, fit: 'cover', position: 'top', format: 'jpeg' })).src
+  : undefined;
+const host = new URL(project.liveUrl).hostname.replace(/^www\./, '');
+
+/** Meta description: whole words, at most 160 characters. */
+const metaDescription =
+  project.description.length <= 160
+    ? project.description
+    : `${project.description.slice(0, 157).replace(/\s+\S*$/, '')}…`;
+
+const overview = [
+  { term: 'Category', value: project.category },
+  { term: 'Project type', value: study.projectType },
+  { term: 'My role', value: study.role },
+  { term: 'Period', value: study.period },
+].filter((row): row is { term: string; value: string } => Boolean(row.value));
+
+const related = (study.related ?? [])
+  .map((slug) => projects.find((item) => item.slug === slug))
+  .filter((item) => item !== undefined);
 
 // Neighbouring projects power the prev/next footer links.
 const index = projects.findIndex((item) => item.slug === project.slug);
@@ -24,7 +56,8 @@ const next = index < projects.length - 1 ? projects[index + 1] : null;
 
 <Layout
   title={project.title}
-  description={project.description.slice(0, 160)}
+  description={metaDescription}
+  image={ogImage}
   type="article"
   project={project}
 >
@@ -42,16 +75,40 @@ const next = index < projects.length - 1 ? projects[index + 1] : null;
       </ol>
     </nav>
 
-    <div class="grid gap-12 lg:grid-cols-[1fr_22rem] lg:gap-16">
+    <!-- Overview -->
+    <header class="cs-header" data-reveal>
       <div>
-        <header data-reveal>
-          <h1 class="text-3xl font-medium sm:text-4xl">{project.title}</h1>
-          <p class="mt-6 text-lg text-[var(--text-body)]">
-            {project.description}
-          </p>
-        </header>
+        <p class="card-category font-mono">{study.projectType ? 'Case study' : 'Project'}</p>
+        <h1 class="mt-3 text-3xl font-medium sm:text-4xl">{project.title}</h1>
+        <p class="mt-6 text-lg text-[var(--text-body)]">{project.description}</p>
+      </div>
 
-        {/* Contained on a fixed-tone plate — see the note in ProjectCard.astro. */}
+      <dl class="cs-overview">
+        {
+          overview.map((row) => (
+            <div>
+              <dt class="font-mono">{row.term}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </header>
+
+    <!-- Lead media: the live-site capture when there is one, otherwise the logo plate. -->
+    {
+      screens ? (
+        <div class="mt-10" data-reveal style="--reveal-delay: 80ms">
+          <ScreenFrame
+            src={screens.desktop}
+            alt={`Desktop homepage of the ${project.title} website`}
+            device="desktop"
+            host={host}
+            priority
+            sizes="(max-width: 1280px) 100vw, 76rem"
+          />
+        </div>
+      ) : (
         <div
           class:list={[
             'mt-10 flex aspect-[16/9] items-center justify-center overflow-hidden rounded-2xl border border-[var(--border-subtle)] p-10 sm:p-14',
@@ -64,22 +121,115 @@ const next = index < projects.length - 1 ? projects[index + 1] : null;
           data-reveal
           style="--reveal-delay: 80ms"
         >
-          {
-            project.image ? (
-              <Image
-                src={project.image}
-                alt={project.title}
-                widths={[640, 960, 1280]}
-                sizes="(max-width: 1024px) 100vw, 48rem"
-                loading="eager"
-                fetchpriority="high"
-                class="max-h-full w-auto max-w-full object-contain"
-              />
-            ) : (
-              <ProjectPlaceholder title={project.title} class="rounded-xl" />
-            )
-          }
+          {project.image ? (
+            <Image
+              src={project.image}
+              alt={`${project.title} logo`}
+              widths={[640, 960, 1280]}
+              sizes="(max-width: 1024px) 100vw, 48rem"
+              loading="eager"
+              fetchpriority="high"
+              class="max-h-full w-auto max-w-full object-contain"
+            />
+          ) : (
+            <ProjectPlaceholder title={project.title} class="rounded-xl" />
+          )}
         </div>
+      )
+    }
+
+    <div class="mt-14 grid gap-12 lg:grid-cols-[1fr_22rem] lg:gap-16">
+      <div class="cs-body">
+        {
+          study.objective && (
+            <section aria-labelledby="cs-objective" data-reveal>
+              <h2 id="cs-objective" class="cs-heading font-mono">Business objective</h2>
+              <p>{study.objective}</p>
+            </section>
+          )
+        }
+
+        {
+          study.challenges && study.challenges.length > 0 && (
+            <section aria-labelledby="cs-challenge" data-reveal>
+              <h2 id="cs-challenge" class="cs-heading font-mono">The challenge</h2>
+              <ul class="cs-list">
+                {study.challenges.map((item) => <li>{item}</li>)}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          study.contributions && study.contributions.length > 0 && (
+            <section aria-labelledby="cs-role" data-reveal>
+              <h2 id="cs-role" class="cs-heading font-mono">What I did</h2>
+              <ul class="cs-list">
+                {study.contributions.map((item) => <li>{item}</li>)}
+              </ul>
+              {study.credits && <p class="mt-4 text-sm text-[var(--text-muted)]">{study.credits}</p>}
+            </section>
+          )
+        }
+
+        {
+          study.process && study.process.length > 0 && (
+            <section aria-labelledby="cs-process" data-reveal>
+              <h2 id="cs-process" class="cs-heading font-mono">Process</h2>
+              <ol class="cs-process">
+                {study.process.map((step) => <li>{step}</li>)}
+              </ol>
+            </section>
+          )
+        }
+
+        {
+          study.results && study.results.length > 0 && (
+            <section aria-labelledby="cs-results" data-reveal>
+              <h2 id="cs-results" class="cs-heading font-mono">Results</h2>
+              <ul class="cs-list">
+                {study.results.map((item) => <li>{item}</li>)}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          screens?.mobile && (
+            <section aria-labelledby="cs-media" data-reveal>
+              <h2 id="cs-media" class="cs-heading font-mono">On mobile</h2>
+              <div class="cs-mobile">
+                <ScreenFrame
+                  src={screens.mobile}
+                  alt={`Mobile homepage of the ${project.title} website`}
+                  device="mobile"
+                  sizes="16rem"
+                />
+                <p class="text-sm text-[var(--text-muted)]">
+                  The live site at phone width, captured {screens.captured}.
+                </p>
+              </div>
+            </section>
+          )
+        }
+
+        {
+          related.length > 0 && (
+            <section aria-labelledby="cs-related" data-reveal>
+              <h2 id="cs-related" class="cs-heading font-mono">Related work</h2>
+              <ul class="cs-related">
+                {related.map((item) => (
+                  <li>
+                    <a href={`/projects/${item.slug}/`}>
+                      <span class="font-mono text-xs text-[var(--text-muted)]">{item.category}</span>
+                      <span class="mt-1 block font-semibold">{item.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
       </div>
 
       <!-- Sidebar: tech stack and links -->
@@ -88,9 +238,7 @@ const next = index < projects.length - 1 ? projects[index + 1] : null;
           {
             project.tags.length > 0 && (
               <>
-                <h2 class="font-mono text-sm text-[var(--accent)] uppercase">
-                  Tech stack
-                </h2>
+                <h2 class="font-mono text-sm text-[var(--accent)] uppercase">Tech stack</h2>
                 <ul class="mt-4 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <li class="rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-1.5 font-mono text-xs text-[var(--text-body)]">
@@ -102,9 +250,9 @@ const next = index < projects.length - 1 ? projects[index + 1] : null;
             )
           }
 
-          <div class="mt-6 flex flex-col gap-3">
+          <div class:list={['flex flex-col gap-3', project.tags.length > 0 && 'mt-6']}>
             <Button href={project.liveUrl} external size="lg">
-              Visit live site
+              {liveLabel}
               <Icon name="arrow-up-right" size={18} />
             </Button>
 

@@ -12,7 +12,7 @@ const allTags = [...new Set(projects.flatMap((project) => project.tags))].sort((
 
 <Layout
   title="Projects"
-  description="Client websites designed, built, and maintained by Dave Oyangorin — WordPress, Elementor, Divi, Duda, and front-end builds with ongoing SEO."
+  description="Client work by Dave Oyangorin: WordPress and Shopify websites, technical and local SEO, and GoHighLevel funnels with CRM automation."
 >
   <div class="container-page py-16 sm:py-20">
     <header class="max-w-2xl" data-reveal>
@@ -21,12 +21,13 @@ const allTags = [...new Set(projects.flatMap((project) => project.tags))].sort((
       </p>
       <h1 class="text-3xl font-medium sm:text-4xl">Projects</h1>
       <p class="mt-5 text-lg text-[var(--text-muted)]">
-        {projects.length} client websites — built, rebuilt, and maintained. Filter by the
+        {projects.length} client projects: websites, SEO, funnels, and CRM automation. Filter by the
         technology behind each one.
       </p>
     </header>
 
-    <!-- Filter bar. Enhancement only: without JS every project stays visible. -->
+    <!-- Filter bar. Enhancement only: hidden under .no-js (see Layout.astro), which
+         the head script clears before first paint, so the bar never shifts the grid. -->
     <div class="mt-10" data-reveal>
       <h2 id="filter-heading" class="sr-only">Filter projects by technology</h2>
       <div
@@ -34,7 +35,6 @@ const allTags = [...new Set(projects.flatMap((project) => project.tags))].sort((
         role="group"
         aria-labelledby="filter-heading"
         data-filter-bar
-        hidden
       >
         <button
           type="button"
@@ -66,6 +66,7 @@ const allTags = [...new Set(projects.flatMap((project) => project.tags))].sort((
       {
         projects.map((project, index) => (
           <div
+            class="flex"
             data-reveal
             data-project-tags={project.tags.join('|')}
             style={`--reveal-delay: ${(index % 3) * 80}ms`}
@@ -89,8 +90,6 @@ const allTags = [...new Set(projects.flatMap((project) => project.tags))].sort((
   const emptyState = document.querySelector<HTMLElement>('[data-empty-state]');
 
   if (bar && grid) {
-    // Revealed only once the script runs, so no-JS users never see a dead control.
-    bar.hidden = false;
 
     const buttons = bar.querySelectorAll<HTMLButtonElement>('[data-filter]');
     const items = grid.querySelectorAll<HTMLElement>('[data-project-tags]');

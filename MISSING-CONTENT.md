@@ -77,15 +77,17 @@ from `src/pages/index.astro`.
 
 ---
 
-## 6. Project images — **missing for seven projects**
+## 6. Project images — **missing for five projects**
 
-No image exists locally for these entries:
+The six featured projects now have desktop + mobile captures of their live sites in
+`src/assets/projects/screens/` (captured Nov 2026; wired up in
+[`src/data/caseStudies.ts`](src/data/caseStudies.ts)). That covered `hidden-roots` and
+`defense-attorney-funnel`. No image exists locally for these entries:
 
 - `heavenly-silk` — the live site serves no image for it.
-- `hidden-roots`, `estatedocprep-ambassador-funnel`, `estatedocprep-white-label-funnel`,
-  `defense-attorney-funnel`, `soundproof-nj`, `bestkeptsecret-visibility` — the
-  GoHighLevel sites and funnels, added from links only. The LeadConnector preview URLs
-  block scraping, so no screenshot could be captured automatically.
+- `estatedocprep-ambassador-funnel`, `estatedocprep-white-label-funnel`,
+  `soundproof-nj`, `bestkeptsecret-visibility` — GoHighLevel sites and funnels,
+  added from links only.
 
 **Effect right now:** each renders `ProjectPlaceholder.astro` — a branded tile with the
 project's initials.
@@ -122,6 +124,53 @@ robots.txt, and OG tags.
 **If you deploy to a new Vercel URL or a custom domain, update this first** — otherwise
 canonicals will point at the old site and you will split your SEO signals between two
 domains.
+
+---
+
+## 10. Case-study detail — **only what is documented** (Nov 2026 redesign)
+
+Case-study pages render each section (objective, challenge, what I did, process,
+results) only when [`src/data/caseStudies.ts`](src/data/caseStudies.ts) has it. The
+six featured entries restate their project descriptions; nothing more was invented.
+
+**Missing for every project:** measured results (traffic, rankings, speed, leads),
+project dates outside employer roles, process stages, collaborators to credit, and
+the original challenge in the client's words. Send any of these with evidence and
+they slot straight in.
+
+---
+
+## 11. Testimonials — **none on file**
+
+The Proof strip under the hero has a testimonial block that stays hidden while
+[`src/data/testimonials.ts`](src/data/testimonials.ts) is empty. Add only quotes the
+client has approved in writing, with their real name and verified role.
+
+---
+
+## 12. Dead or changed live links — **needs your decision**
+
+Found while testing (Nov 2026):
+
+- ~~**`vameplease`**~~ — removed Nov 2026 (domain no longer resolves).
+  `/projects/vameplease/` now 301-redirects to `/projects/` via `vercel.json`. The
+  VAMEPLEASE role stays in the experience timeline.
+- **`axpara`** — `https://axpara.com/talent/v2/about-us` now redirects to
+  `lifeboat.partners`, a different company's site.
+- **`concreatelevelingtech`** (txconcreteleveling) — the description is about a
+  thermal-break manufacturer (it matches Climaspec), not concrete leveling. It looks
+  copied from the wrong project.
+
+Both dead links still show on cards as "Live website". Replace them with archived
+URLs, remove the live link, or drop the projects.
+
+---
+
+## 13. Skills added from the redesign brief — **confirm**
+
+Asana, Slack, Cursor, Claude Code, and Google Apps Script were added to the Skills
+section from the redesign brief; nothing else on the site evidences them. Remove any
+that do not apply in [`src/data/skills.ts`](src/data/skills.ts).
 
 ---
 

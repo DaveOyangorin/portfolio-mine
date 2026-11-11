@@ -36,7 +36,7 @@ import Icon from '../icons/Icon.astro';
     root.dataset.theme = next;
     syncLabel();
     try {
-      localStorage.setItem('theme', next);
+      localStorage.setItem('theme-choice', next);
     } catch (e) {
       /* Storage unavailable — the choice just won't persist. */
     }

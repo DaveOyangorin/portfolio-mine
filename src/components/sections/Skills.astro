@@ -1,93 +1,36 @@
 ---
 /**
- * Proficiency meters, one per discipline, each expanding to reveal the tools
- * and capabilities behind it. Bars are scaled to years, so the longest tenure
- * reads 100%.
- *
- * The expand/collapse is the shared GSAP accordion (scripts/motion/skills.ts),
- * driven entirely by the `data-skill-*` hooks below, so nothing section-specific
- * ships to the client.
+ * Skills grouped by category. Static on purpose: every tool is visible without
+ * interaction, and nothing is scored with an invented proficiency level.
  */
-import { skillLevel, skillMeters } from '../../data/skills';
+import { skillGroups } from '../../data/skills';
 import Section from '../ui/Section.astro';
 ---
 
 <Section
   id="skills"
-  eyebrow="02 — Skills"
-  title="What I work with"
-  subtitle="My background combines web development with the digital marketing systems that surround a modern website. I began primarily in WordPress and front-end development, then expanded into SEO, automation, analytics, paid advertising, funnels, CRM management, and content marketing. This combination allows me to work across both the technical and marketing sides of a business's digital presence."
+  eyebrow="05 — Skills"
+  title="Tools I work with"
+  subtitle="From the front end and the CMS to search, tracking, CRM automation, and the AI tools that speed it all up."
   tone="sunken"
 >
-  <ul class="mx-auto grid max-w-3xl gap-4" data-skill-accordion>
+  <ul class="skill-grid">
     {
-      skillMeters.map((meter, index) => (
+      skillGroups.map((group, index) => (
         <li
-          class="overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface)] transition-colors duration-300 ease-[var(--ease-out-soft)] hover:border-[var(--accent)]"
+          class="skill-group"
           data-reveal
-          data-reveal-scale
-          style={`--reveal-delay: ${index * 70}ms`}
+          style={`--reveal-delay: ${(index % 3) * 70}ms`}
         >
-          {/* Spans, not divs: this is all inside a <button>, which only takes
-              phrasing content. */}
-          <button
-            type="button"
-            class="w-full cursor-pointer p-6 text-left focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[var(--accent)]"
-            aria-expanded="false"
-            aria-controls={`skill-panel-${meter.id}`}
-            data-skill-toggle
-          >
-            <span class="flex items-baseline justify-between gap-3">
-              <span class="font-medium text-[var(--text-strong)]">{meter.name}</span>
-              <span class="font-mono text-xs whitespace-nowrap text-[var(--text-muted)]">
-                {meter.years}
-                {meter.suffix} {meter.years === 1 ? 'year' : 'years'}
-              </span>
-            </span>
-
-            <span class="mt-1.5 block text-sm text-[var(--text-muted)]">
-              {meter.description}
-            </span>
-
-            {/* Decorative bar — the years are already stated in text above. */}
-            <span
-              aria-hidden="true"
-              class="mt-3 block h-1.5 overflow-hidden rounded-full bg-[var(--surface-sunken)]"
-            >
-              <span
-                class="block h-full rounded-full bg-[var(--accent)] opacity-80"
-                style={`width: ${skillLevel(meter)}%`}
-              />
-            </span>
-
-            <span class="mt-3 flex items-center gap-2 font-mono text-xs text-[var(--text-muted)]">
-              {/* Rotated 180° by GSAP while the panel is open. */}
-              <svg
-                class="size-3.5 text-[var(--accent)]"
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-                data-skill-icon
-              >
-                <path d="M4 6l4 4 4-4" />
-              </svg>
-              Click to view skills
-            </span>
-          </button>
-
-          <div id={`skill-panel-${meter.id}`} data-skill-panel>
-            <ul class="flex flex-wrap gap-2 px-6 pb-6">
-              {meter.items.map((item) => (
-                <li class="rounded-full border border-[var(--border-subtle)] bg-[var(--surface-sunken)] px-3 py-1 font-mono text-xs text-[var(--text-muted)]">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <h3 id={`skill-${group.id}`}>{group.name}</h3>
+          <p class="mt-1.5 text-sm text-[var(--text-muted)]">{group.description}</p>
+          <ul class="mt-5 flex flex-wrap gap-2">
+            {group.items.map((item) => (
+              <li class="rounded-full border border-[var(--border-subtle)] bg-[var(--surface-sunken)] px-3 py-1 font-mono text-xs text-[var(--text-body)]">
+                {item}
+              </li>
+            ))}
+          </ul>
         </li>
       ))
     }

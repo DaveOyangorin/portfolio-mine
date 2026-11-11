@@ -16,7 +16,7 @@ import mandyslaundryImg from '../assets/projects/mandyslaundry.png';
 import smcdataImg from '../assets/projects/smcdata.jpg';
 import totalhomeinteriorsImg from '../assets/projects/totalhomeinteriors.avif';
 import txconcretelevelingImg from '../assets/projects/txconcreteleveling.png';
-import vamepleaseImg from '../assets/projects/vameplease.png';
+import { caseStudies } from './caseStudies';
 import type { Project } from './types';
 
 export const projects: Project[] = [
@@ -38,6 +38,7 @@ export const projects: Project[] = [
     // White wordmark — needs a dark plate to be legible.
     imageTone: 'dark',
     featured: true,
+    category: 'Website Development',
   },
   {
     slug: 'linkedxl',
@@ -54,7 +55,8 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://linkedxl.com/',
     image: linkedxlImg,
-    featured: true,
+    featured: false,
+    category: 'Website Development',
   },
   {
     slug: 'concreatelevelingtech',
@@ -64,26 +66,8 @@ export const projects: Project[] = [
     tags: ['WordPress', 'Divi', 'SEO', 'JavaScript', 'CSS', 'HTML'],
     liveUrl: 'https://www.txconcreteleveling.com/',
     image: txconcretelevelingImg,
-    featured: true,
-  },
-  {
-    slug: 'vameplease',
-    title: 'VAMEPLEASE',
-    description:
-      'A modern consulting agency website designed to attract and convert business owners looking to scale. It highlights strategic services like website development, CRM management, automation, and SEO, supported by a clear process, strong messaging, and multiple call-to-actions.',
-    tags: [
-      'WordPress',
-      'Elementor',
-      'HTML',
-      'CSS',
-      'Figma',
-      'SEO',
-      'Digital Marketing',
-      'Google Ads',
-    ],
-    liveUrl: 'https://vameplease.com/',
-    image: vamepleaseImg,
-    featured: true,
+    featured: false,
+    category: 'Website Development',
   },
   {
     slug: 'totalhomeinteriors',
@@ -100,6 +84,7 @@ export const projects: Project[] = [
     liveUrl: 'https://totalhomeinteriors.tech/',
     image: totalhomeinteriorsImg,
     featured: true,
+    category: 'SEO & Digital Marketing',
   },
   {
     slug: 'smcdata',
@@ -109,7 +94,8 @@ export const projects: Project[] = [
     tags: ['WordPress', 'Beaver Builder', 'HTML', 'CSS', 'SEO', 'Digital Marketing'],
     liveUrl: 'https://smcdata.com/',
     image: smcdataImg,
-    featured: true,
+    featured: false,
+    category: 'SEO & Digital Marketing',
   },
   {
     slug: 'axpara',
@@ -120,6 +106,7 @@ export const projects: Project[] = [
     liveUrl: 'https://axpara.com/talent/v2/about-us',
     image: axparaImg,
     featured: false,
+    category: 'Website Development',
   },
   {
     slug: 'advancefootnurse',
@@ -137,6 +124,7 @@ export const projects: Project[] = [
     liveUrl: 'https://www.advancedfootnurse.com/',
     image: advancefootnurseImg,
     featured: false,
+    category: 'SEO & Digital Marketing',
   },
   {
     slug: 'climaspec',
@@ -148,6 +136,7 @@ export const projects: Project[] = [
     liveUrl: 'https://climaspec.com/',
     image: climaspecImg,
     featured: false,
+    category: 'Website Development',
   },
   {
     slug: 'advancedfootnurse-shop',
@@ -165,7 +154,8 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://shop.advancedfootnurse.com/',
     image: advancedfootnurseShopImg,
-    featured: false,
+    featured: true,
+    category: 'E-commerce',
   },
   {
     slug: 'estatedocprep',
@@ -184,7 +174,8 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://estatedocprep.com/',
     image: estatedocprepImg,
-    featured: false,
+    featured: true,
+    category: 'Website Development',
   },
   {
     slug: 'mandys-laundry',
@@ -203,6 +194,7 @@ export const projects: Project[] = [
     liveUrl: 'https://mandyslaundry.com/',
     image: mandyslaundryImg,
     featured: false,
+    category: 'SEO & Digital Marketing',
   },
   {
     slug: 'heavenly-silk',
@@ -214,6 +206,7 @@ export const projects: Project[] = [
     // The live site serves no image for this project — renders ProjectPlaceholder.
     image: null,
     featured: false,
+    category: 'Website Development',
   },
   {
     slug: 'hidden-roots',
@@ -231,7 +224,8 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://hiddenrootsllc.com/',
     image: null,
-    featured: false,
+    featured: true,
+    category: 'CRM & Automation',
   },
   {
     slug: 'estatedocprep-ambassador-funnel',
@@ -249,6 +243,8 @@ export const projects: Project[] = [
     liveUrl: 'https://sites.leadconnectorhq.com/preview/XPrpzn9TR3ZhU0mLTrsG',
     image: null,
     featured: false,
+    category: 'CRM & Automation',
+    liveLabel: 'View funnel',
   },
   {
     slug: 'estatedocprep-white-label-funnel',
@@ -266,6 +262,8 @@ export const projects: Project[] = [
     liveUrl: 'https://sites.leadconnectorhq.com/preview/0Tw8EXQGHloyrm9Hm25j',
     image: null,
     featured: false,
+    category: 'CRM & Automation',
+    liveLabel: 'View funnel',
   },
   {
     slug: 'defense-attorney-funnel',
@@ -282,7 +280,9 @@ export const projects: Project[] = [
     ],
     liveUrl: 'https://sites.leadconnectorhq.com/preview/Twba3dvzJVqOLx0jx0wr',
     image: null,
-    featured: false,
+    featured: true,
+    category: 'CRM & Automation',
+    liveLabel: 'View funnel',
   },
   {
     slug: 'soundproof-nj',
@@ -300,6 +300,7 @@ export const projects: Project[] = [
     liveUrl: 'https://soundproofnj.com/home-page-page',
     image: null,
     featured: false,
+    category: 'CRM & Automation',
   },
   {
     slug: 'bestkeptsecret-visibility',
@@ -318,11 +319,28 @@ export const projects: Project[] = [
     liveUrl: 'https://bestkeptsecret.ai/bks---visibility-page',
     image: null,
     featured: false,
+    category: 'CRM & Automation',
+    liveLabel: 'View funnel',
   },
 ];
 
-/** Projects shown in the homepage highlight grid. */
-export const featuredProjects = projects.filter((project) => project.featured);
+// Attach case-study detail and screenshots by slug.
+for (const project of projects) Object.assign(project, caseStudies[project.slug]);
+
+/** Homepage highlight order: one strong example per capability. */
+const FEATURED_ORDER = [
+  'estatedocprep',
+  'hidden-roots',
+  'totalhomeinteriors',
+  'advancedfootnurse-shop',
+  'd3digital-marketing',
+  'defense-attorney-funnel',
+];
+
+/** Projects shown in the homepage highlight grid, in FEATURED_ORDER. */
+export const featuredProjects = projects
+  .filter((project) => project.featured)
+  .sort((a, b) => FEATURED_ORDER.indexOf(a.slug) - FEATURED_ORDER.indexOf(b.slug));
 
 /** Looks up a project by slug, for the detail route. */
 export function getProject(slug: string): Project | undefined {

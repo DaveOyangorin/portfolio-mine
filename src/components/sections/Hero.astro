@@ -58,7 +58,7 @@ const contactHref = contact.email ? `mailto:${contact.email}` : '#contact';
             profile.heroRoles.map((role, index) => (
               <>
                 {index > 0 && <span class="sr-only"> | </span>}
-                <span class:list={['hero-role', index === 1 && 'text-gradient']}>{role}</span>
+                <span class="hero-role text-gradient">{role}</span>
               </>
             ))
           }

@@ -8,10 +8,10 @@
 /** Canonical origin. Update this when a custom domain is attached in Vercel. */
 export const SITE_URL = 'https://dave-oyangorin-portfolio.vercel.app';
 
-export const SITE_TITLE = 'Dave Oyangorin — Web Developer, SEO & Automation Specialist';
+export const SITE_TITLE = 'Dave Oyangorin — Website Developer, SEO & Automation Specialist';
 
 export const SITE_DESCRIPTION =
-  'Dave Oyangorin is a web developer, WordPress developer, and SEO specialist in the Philippines who builds fast websites, technical SEO, and GoHighLevel CRM automation.';
+  'Website developer, SEO and automation specialist in the Philippines. Dave Oyangorin builds fast websites, technical SEO, and GoHighLevel CRM automation.';
 
 /**
  * Keywords reflecting the services actually offered.

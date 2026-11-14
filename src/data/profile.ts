@@ -7,7 +7,7 @@ export const profile = {
   name: 'Dave Oyangorin',
   /** Positioning used in metadata, JSON-LD jobTitle, and the hero. */
   title: 'Web Developer, SEO Specialist & Automation Specialist',
-  shortTitle: 'Web Developer & SEO Specialist',
+  shortTitle: 'Website, SEO & Automation Specialist',
   /** The hero headline, one role per line. */
   heroRoles: ['Web Developer', 'SEO Specialist', 'Automation Specialist'],
   location: 'Negros Oriental, Philippines',

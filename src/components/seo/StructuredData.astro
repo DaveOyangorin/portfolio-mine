@@ -13,6 +13,13 @@ interface Props {
 }
 
 const { project, title, description = SITE_DESCRIPTION } = Astro.props;
+
+/** The three focus services (Website, SEO, Automation), each backed by services.ts. */
+const CORE_SERVICES = [
+  { name: 'Website Development', serviceType: 'Website development', description: 'Fast, responsive business websites built with WordPress, Elementor, Divi, HTML, CSS, and JavaScript.' },
+  { name: 'Search Engine Optimization (SEO)', serviceType: 'SEO', description: 'Technical SEO, on-page optimization, keyword research, schema, indexing, and Core Web Vitals.' },
+  { name: 'Marketing Automation', serviceType: 'Automation', description: 'GoHighLevel CRM automation: funnels, pipelines, workflows, webhooks, and automated lead follow-up.' },
+];
 const homeUrl = new URL('/', SITE_URL).href;
 const pageUrl = new URL(`${Astro.url.pathname.replace(/\/$/, '')}/`, SITE_URL).href;
 const personId = `${homeUrl}#person`;
@@ -31,7 +38,11 @@ const person = {
   ...(pageUrl === homeUrl ? {
     description: SITE_DESCRIPTION,
     address: { '@type': 'PostalAddress', addressRegion: 'Negros Oriental', addressCountry: 'PH' },
-    knowsAbout: allSkillNames,
+    knowsAbout: [...new Set([...CORE_SERVICES.map((service) => service.name), ...allSkillNames])],
+    makesOffer: CORE_SERVICES.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', ...service, provider: { '@id': personId } },
+    })),
   } : {}),
 };
 

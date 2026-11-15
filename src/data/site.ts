@@ -35,5 +35,8 @@ export const SITE_KEYWORDS = [
   'Philippines web developer',
 ] as const;
 
+/** Google Tag Manager container. Public ID, loaded by src/scripts/analytics.ts. */
+export const GTM_ID = 'GTM-PZRKLMH8';
+
 export const SITE_LOCALE = 'en_US';
 export const SITE_LANG = 'en';

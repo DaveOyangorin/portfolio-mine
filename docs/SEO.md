@@ -61,7 +61,10 @@ window.dispatchEvent(new CustomEvent('portfolio:analytics-consent', { detail: tr
 // Revoke using detail: false.
 ```
 
-This adds no banner or new visible UI. Set `PUBLIC_GA4_REQUIRE_CONSENT=false` only
+When consent is required, a small banner (`ConsentBanner.astro`) asks once and
+remembers the choice in `localStorage` (`analytics-consent`); the footer's
+"Cookie settings" link reopens it. Google Tag Manager (`GTM_ID` in
+`src/data/site.ts`, overridable with `PUBLIC_GTM_ID`) loads only after Accept. Set `PUBLIC_GA4_REQUIRE_CONSENT=false` only
 if you have chosen a configuration that does not require prior opt-in. Collection
 also respects Do Not Track, runs only on the configured production origin, and
 is disabled for Vercel previews, development, and the 404. Verify actual page views

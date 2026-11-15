@@ -5,6 +5,9 @@ import { profile } from '../../data/profile';
 import { contact } from '../../data/socials';
 import SocialLinks from '../ui/SocialLinks.astro';
 import Icon from '../icons/Icon.astro';
+import { showsConsent } from '../seo/analyticsConfig';
+
+interface Props { noindex?: boolean }
 
 const year = new Date().getFullYear();
 ---
@@ -68,7 +71,18 @@ const year = new Date().getFullYear();
       class="mt-12 flex flex-col gap-3 border-t border-[var(--border-subtle)] pt-6 text-sm text-[var(--text-muted)] sm:flex-row sm:items-center sm:justify-between"
     >
       <p>&copy; {year} {profile.name}. All rights reserved.</p>
-      <p>Built with Astro &amp; Tailwind CSS.</p>
+      <p>Built with Astro &amp; Tailwind CSS.{
+          showsConsent(Astro.props.noindex) && (
+            <button
+              type="button"
+              data-consent-open
+              hidden
+              class="ml-3 underline underline-offset-2 transition-colors hover:text-[var(--accent)]"
+            >
+              Cookie settings
+            </button>
+          )
+        }</p>
     </div>
   </div>
 </footer>

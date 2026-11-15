@@ -1,0 +1,44 @@
+---
+/**
+ * Analytics consent banner. Rendered hidden; src/scripts/analytics.ts shows it
+ * only when consent is required and the visitor has not chosen yet.
+ */
+import { showsConsent } from './analyticsConfig';
+
+interface Props { noindex?: boolean }
+---
+
+{
+  showsConsent(Astro.props.noindex) && (
+    <section
+      data-consent-banner
+      hidden
+      aria-labelledby="consent-title"
+      class="fixed inset-x-4 bottom-4 z-[60] mx-auto max-w-md rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--surface-raised)] p-5 text-[var(--text-body)] shadow-[var(--shadow-card-hover)] sm:left-6 sm:right-auto sm:mx-0"
+    >
+      <h2 id="consent-title" class="text-base font-medium text-[var(--text-strong)]">
+        Analytics cookies
+      </h2>
+      <p class="mt-2 text-sm text-[var(--text-muted)]">
+        May I use Google Tag Manager to count visits and see which pages are useful? No ads, no
+        personal profiles.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          data-consent-choice="granted"
+          class="rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-contrast)] transition-shadow hover:shadow-[var(--shadow-card)]"
+        >
+          Accept
+        </button>
+        <button
+          type="button"
+          data-consent-choice="denied"
+          class="rounded-xl border border-[var(--border-subtle)] px-5 py-2.5 text-sm font-medium text-[var(--text-strong)] transition-colors hover:border-[var(--accent)]"
+        >
+          Decline
+        </button>
+      </div>
+    </section>
+  )
+}

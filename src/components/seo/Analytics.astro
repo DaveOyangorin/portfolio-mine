@@ -1,15 +1,12 @@
 ---
 import { SITE_URL } from '../../data/site';
+import { analytics } from './analyticsConfig';
 
 interface Props { noindex?: boolean }
-const id = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID?.trim();
-if (id && !/^G-[A-Z0-9]+$/.test(id)) throw new Error('PUBLIC_GA4_MEASUREMENT_ID must be a GA4 G-… ID.');
-const isPreview = import.meta.env.VERCEL_ENV && import.meta.env.VERCEL_ENV !== 'production';
-const enabled = import.meta.env.PROD && !isPreview && !Astro.props.noindex && id;
-const requireConsent = import.meta.env.PUBLIC_GA4_REQUIRE_CONSENT !== 'false';
+const enabled = analytics.enabled(Astro.props.noindex);
 ---
 
-{enabled && <meta name="portfolio-analytics" content={id} data-origin={SITE_URL} data-require-consent={String(requireConsent)} />}
+{enabled && <meta name="portfolio-analytics" content={analytics.ga4} data-gtm={analytics.gtm} data-origin={SITE_URL} data-require-consent={String(analytics.requireConsent)} />}
 
 <script>
   import '../../scripts/analytics';

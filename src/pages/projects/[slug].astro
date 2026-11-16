@@ -48,14 +48,6 @@ const related = (study.related ?? [])
   .map((slug) => projects.find((item) => item.slug === slug))
   .filter((item) => item !== undefined);
 
-/**
- * Search title: the project name plus what the work was (its category), so the
- * result says what the page shows. The category is dropped if the full title
- * (with the " | Dave Oyangorin" suffix) would pass ~65 characters.
- */
-const withCategory = `${project.title} — ${project.category}`;
-const pageTitle = withCategory.length <= 48 ? withCategory : project.title;
-
 // Neighbouring projects power the prev/next footer links.
 const index = projects.findIndex((item) => item.slug === project.slug);
 const previous = index > 0 ? projects[index - 1] : null;
@@ -63,7 +55,7 @@ const next = index < projects.length - 1 ? projects[index + 1] : null;
 ---
 
 <Layout
-  title={pageTitle}
+  title={project.title}
   description={metaDescription}
   image={ogImage}
   type="article"

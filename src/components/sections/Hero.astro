@@ -52,13 +52,14 @@ const contactHref = contact.email ? `mailto:${contact.email}` : '#contact';
         <!-- data-hero-title (not data-hero): the headline is animated per-letter
              by heroTitle.ts instead of fading up with the rest of the stack.
              Separators are visually hidden so the accessible name reads
-             "Web Developer | SEO Specialist | Digital Marketing Specialist | Automation Specialist". -->
+             "Digital Marketing Specialist | Web Developer | SEO Specialist | Automation Specialist".
+             The lead role is white; the rest keep the yellow accent. -->
         <h1 class="hero-roles" data-hero-title>
           {
             profile.heroRoles.map((role, index) => (
               <>
                 {index > 0 && <span class="sr-only"> | </span>}
-                <span class="hero-role text-gradient">{role}</span>
+                <span class={index === 0 ? 'hero-role hero-role--lead' : 'hero-role text-gradient'}>{role}</span>
               </>
             ))
           }

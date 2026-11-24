@@ -471,6 +471,10 @@ body > footer h2 {
   display: block;
 }
 
+#home .hero-role--lead {
+  color: var(--rb-white);
+}
+
 #home .hero-role ~ .hero-role {
   margin-top: 0.08em;
 }

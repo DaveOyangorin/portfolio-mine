@@ -9,7 +9,7 @@ export const profile = {
   title: 'Web Developer, SEO Specialist & Automation Specialist',
   shortTitle: 'Website, SEO & Automation Specialist',
   /** The hero headline, one role per line. */
-  heroRoles: ['Web Developer', 'SEO Specialist', 'Digital Marketing Specialist', 'Automation Specialist'],
+  heroRoles: ['Digital Marketing Specialist', 'Web Developer', 'SEO Specialist', 'Automation Specialist'],
   location: 'Negros Oriental, Philippines',
 
   heroHeadline:

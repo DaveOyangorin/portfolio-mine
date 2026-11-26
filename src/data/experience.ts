@@ -9,7 +9,7 @@ export const experience: ExperienceEntry[] = [
     period: 'Jul 2025 – Aug 2026',
     startDate: '2025-07-01',
     endDate: '2026-08-31',
-    duration: '16 months',
+    duration: 'Present',
     highlights: [
       'Built WordPress websites using Elementor, Divi, Beaver Builder, and WP Bakery across desktop, tablet, and mobile devices.',
       'Implemented technical SEO audits, on-page optimization, and structured data implementation to improve search visibility.',

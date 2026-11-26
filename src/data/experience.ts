@@ -6,9 +6,9 @@ export const experience: ExperienceEntry[] = [
   {
     company: 'D3 Digital Marketing',
     role: 'Web Developer / AI Automation / Digital Marketing / Social Media Manager',
-    period: 'Jul 2025 – Aug 2026',
+    period: 'Jul 2025 to Present',
     startDate: '2025-07-01',
-    endDate: '2026-08-31',
+    endDate: 'Present',
     duration: 'Present',
     highlights: [
       'Built WordPress websites using Elementor, Divi, Beaver Builder, and WP Bakery across desktop, tablet, and mobile devices.',
